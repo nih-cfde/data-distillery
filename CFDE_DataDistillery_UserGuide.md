@@ -185,7 +185,31 @@ MATCH (motrpac_code:Code {SAB:"MOTRPAC"})<-[:CODE]-(motrpac_concept:Concept)-[r1
 RETURN DISTINCT motrpac_code.CODE AS MoTrPac_DS, rat_gene_code.CODE AS rat_gene, hgnc_term.name AS human_gene,tissue_term_1.name AS tissue_MoTrPac, tissue_term_2.name AS tissue_GTEx, expr_code.CODE AS TPM,perturbagen_term.name AS perturbagen,type(r3) AS effect_direction LIMIT 20
 ```
 
-### <ins>GlyGen</ins>
+### <ins>GlyGen, KF and GTEx</ins>
+
+Birth defects could be caused by dysregulation of glycosylation  
+Certain heart defects have been shown to be associated with loss of glycosylation (e.g. heterotaxy). KF heart defect cohort (711 subjects) may have evidence of genetic variants affecting glycosylation genes.
+KF deleterious variants that lead to loss of glycosylation by affecting glycoenzymes  and glycoenzyme expression in the GTEx liver dataset 
+Query Description: Intersection of GLYGEN, KF and GTEx. The query retrieves Glycoreactions {SAB:”GLYCOSYLTRANSFERASE.REACTION”} and subsequently Glycoenzymes data from GLYCANS dataset. Associated genes, their expression and variant count are obtained from GTEXEXP and KF datatsets respectively. KF and GTEx data can be utilized to filter the results.
+
+Graphical Representation
+```cypher
+WITH "Myocardium of left ventricle" AS tissue_name
+MATCH (glycoreaction_code:Code)<-[:CODE]-(glycoreaction_concept:Concept)-[r1:has_enzyme_protein {SAB:"GLYCANS"}]->(glycoenzyme_concept:Concept)-[r2:gene_product_of]->(gene_concept:Concept)-[r3]-(bin_concept:Concept)-[:CODE]->(bin_code:Code {SAB:"KFGENEBIN"}),(tissue_concept:Concept)-[r4:expresses {SAB:"GTEXEXP"}]->(gtexexp_concept:Concept)-[r5 {SAB:"GTEXEXP"}]->(gene_concept:Concept),(gtexexp_concept:Concept)-[r6:has_expression {SAB:"GTEXEXP"}]->(exp_concept:Concept)-[:CODE]-(exp_code:Code),
+(gene_concept:Concept)-[:PREF_TERM]->(gene:Term),
+(glycoenzyme_concept:Concept)-[:PREF_TERM]->(glycoenzyme:Term),
+(tissue_concept:Concept)-[:PREF_TERM]-(tissue:Term {name:tissue_name})
+RETURN * LIMIT 1
+```
+Tabular Output
+```cypher
+WITH "Myocardium of left ventricle" AS tissue_name
+MATCH (glycoreaction_code:Code)<-[:CODE]-(glycoreaction_concept:Concept)-[r1:has_enzyme_protein {SAB:"GLYCANS"}]->(glycoenzyme_concept:Concept)-[r2:gene_product_of]->(gene_concept:Concept)-[r3]-(bin_concept:Concept)-[:CODE]->(bin_code:Code {SAB:"KFGENEBIN"}),(tissue_concept:Concept)-[r4:expresses {SAB:"GTEXEXP"}]->(gtexexp_concept:Concept)-[r5 {SAB:"GTEXEXP"}]->(gene_concept:Concept),(gtexexp_concept:Concept)-[r6:has_expression {SAB:"GTEXEXP"}]->(exp_concept:Concept)-[:CODE]-(exp_code:Code),
+(gene_concept:Concept)-[:PREF_TERM]->(gene:Term),
+(glycoenzyme_concept:Concept)-[:PREF_TERM]->(glycoenzyme:Term),
+(tissue_concept:Concept)-[:PREF_TERM]-(tissue:Term {name:tissue_name})
+RETURN DISTINCT gene.name,tissue.name,glycoenzyme.name,bin_code.value AS variant_count,exp_code.CODE AS liver_expression
+```
 
 ### <ins>ERCC</ins>
 
@@ -391,7 +415,7 @@ The query extracts genes associated with the `HubMAP Azimuth` clusters in human 
 ```cypher
 MATCH (azimuth_term:Term)-[:PT]-(azimuth_code:Code {SAB:"AZ"})-[:CODE]-(azimuth_concept:Concept)-[r1 {SAB:"HMAZ"}]->(gene_concept:Concept)-[:CODE]-(gene_code:Code {SAB:"HGNC"}), (azimuth_concept:Concept)-[:isa]->(CL_concept:Concept)-[:CODE]-(CL_code:Code {SAB:"CL"})-[:PT]-(CL_term:Term) RETURN * LIMIT 1
 ```
-<img src="https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/images/AZ.png" width="750" height="550">
+<img src="https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/images/AZ.png" width="750" height="500">
 
 ### <ins>Illuminating the Druggable Genome (IDG)</ins>
 
