@@ -348,10 +348,10 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 | **Subject SAB** | **Predicate**  | **Object SAB** | **Count** |
 |-----------------|----------------|----------------|-----------|
-| GTEXEXP         | expressed_in   | HGNC           | 1573380   |
-| GTEXEXP         | has_expression | EXPBINS        | 1573380   |
-| GTEXEXP         | expressed_in   | UBERON         | 1503452   |
-| GTEXEXP         | expressed_in   | EFO            | 69928     |
+| GTEXEXP         | expressed_in   | HGNC           | 1,573,380 |
+| GTEXEXP         | has_expression | EXPBINS        | 1,573,380 |
+| GTEXEXP         | expressed_in   | UBERON         | 1,503,452 |
+| GTEXEXP         | expressed_in   | EFO            | 69,928    |
 
 ##### GTEx GTEXEQTL/PVALUEBINS Node Counts
 
@@ -637,9 +637,9 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 | **Subject SAB** | **Predicate**   | **Object SAB** | **Count** |
 |-----------------|-----------------|----------------|-----------|
-| MOTRPAC         | associated_with | ENSEMBL        | 8570      |
-| MOTRPAC         | located_in      | UBERON         | 8571      |
-| MOTRPAC         | sex             | PATO           | 8571      |
+| MOTRPAC         | associated_with | ENSEMBL        | 8,570     |
+| MOTRPAC         | located_in      | UBERON         | 8,571     |
+| MOTRPAC         | sex             | PATO           | 8,571     |
 
 ### Metabolomics Workbench (MW) DCC
 
