@@ -348,10 +348,10 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 | **Subject SAB** | **Predicate**  | **Object SAB** | **Count** |
 |-----------------|----------------|----------------|-----------|
-| GTEXEXP         | expressed_in   | HGNC           |           |
-| GTEXEXP         | has_expression | EXPBINS        |           |
-| GTEXEXP         | expressed_in   | UBERON         |           |
-| GTEXEXP         | expressed_in   | EFO            |           |
+| GTEXEXP         | expressed_in   | HGNC           | 1,573,380 |
+| GTEXEXP         | has_expression | EXPBINS        | 1,573,380 |
+| GTEXEXP         | expressed_in   | UBERON         | 1,503,452 |
+| GTEXEXP         | expressed_in   | EFO            | 69,928    |
 
 ##### GTEx GTEXEQTL/PVALUEBINS Node Counts
 
@@ -462,16 +462,16 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 | **SAB** | **Count** |
 |---------|-----------|
-| HGNC    |           |
-| AZ      |           |
+| HGNC    | 677       |
+| AZ      | 92        |
 
 ##### HuBMAP Az Edge Counts
 
 | **Subject SAB** | **Predicate**             | **Object SAB** | **Count** |
 |-----------------|---------------------------|----------------|-----------|
-| AZ              | has_marker_gene_in_kidney | HGNC           |           |
-| AZ              | has_marker_gene_in_liver  | HGNC           |           |
-| AZ              | has_marker_gene_in_heart  | HGNC           |           |
+| AZ              | has_marker_gene_in_kidney | HGNC           | 485       |
+| AZ              | has_marker_gene_in_liver  | HGNC           | 225       |
+| AZ              | has_marker_gene_in_heart  | HGNC           | 200       |
 
 ### Illuminating the Druggable Genome (IDG) DCC
 
@@ -637,9 +637,9 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 | **Subject SAB** | **Predicate**   | **Object SAB** | **Count** |
 |-----------------|-----------------|----------------|-----------|
-| MOTRPAC         | associated_with | ENSEMBL        |           |
-| MOTRPAC         | located_in      | UBERON         |           |
-| MOTRPAC         | sex             | PATO           |           |
+| MOTRPAC         | associated_with | ENSEMBL        | 8,570     |
+| MOTRPAC         | located_in      | UBERON         | 8,571     |
+| MOTRPAC         | sex             | PATO           | 8,571     |
 
 ### Metabolomics Workbench (MW) DCC
 
