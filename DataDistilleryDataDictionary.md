@@ -758,7 +758,7 @@ This set of assertions maps mouse gene nodes (HCOP) to the mammalian phenotype o
 
 Homo Sapiens Chromosomal Location Ontology (HSCLO) was primarily created to connect 4DN loop coordinates to the rest of the graph through the mapping between HSCLO and GENCODE. HSCLO was later utilized to connect GTEXEQTL locations in the graph as searchable nodes at 1 kbp resolution (same as 4DN). The dataset relationships as well as nodes use HSCLO as their SAB. HSCLO nodes are defined at 5 resolution levels; chromosomes, 1 Mbp, 100 kbp, 10 kbp and 1kbp with each level connects to lower level with above\_(resolution level)\_band (e.g. "above_1Mbp_band", "above 1_kbp_band") and nodes at the same resolution level are connected through prcedes\_(resolution level)\_band (e.g. "precedes_10kbp_band"). The dataset contains 3,431,155 nodes and 6,862,195 relationships (13,724,390 bidirectional).
 
-### HSIGDB
+### MSIGDB
 
 Five subsets of MSigDB v7.4 datasets were introduced as entity-gene relationships to the knowledge graph: C1 (positional gene sets), C2 (curated gene sets), C3 (regulatory target gene sets), C8 (cell type signature gene sets) and H (hallmark gene sets ). With this subset, MSIGDB Concept nodes were created for MSigDB systematic names (used as Codes excluding KEGG data). The relationships between these Concept nodes and HGNC nodes were defined using the mentioned 5 subsets where the subset information was included in the relationship SABs as "MSIGDB".
 
