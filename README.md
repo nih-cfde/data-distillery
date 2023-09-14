@@ -11,7 +11,7 @@ Quick links:
   - [Data Distillery Graph Database Distributions](https://app.globus.org/file-manager?origin_id=24c2ee95-146d-4513-a1b3-ac0bfdb7856f&origin_path=%2Fprojects%2Fdata-distillery%2FValidated%2F)
 - [Universal Biomedical Knowledge Graph (UBKG) Documentation](https://ubkg.docs.xconsortia.org/)
   - [UBKG Assertion Sources](https://ubkg.docs.xconsortia.org/contexts)
-  - [Installation instructions](https://ubkg.docs.xconsortia.org/docker/) for the docker image of the UBKG necessary for running a Data Distillery instance.
+  - [UBKG Docker Installation Instructions](https://ubkg.docs.xconsortia.org/docker/)
   - [Glossary of Terms](https://ubkg.docs.xconsortia.org/glossary/)
   - [UBKG ETL Source Code](https://github.com/x-atlas-consortia/ubkg-etl)
   - [UBKG Neo4j Source Code](https://github.com/x-atlas-consortia/ubkg-neo4j)
