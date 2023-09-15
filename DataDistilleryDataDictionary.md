@@ -711,22 +711,38 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 ![](images/SPARC-schema-diagram.png)
 
-##### SPARC Node and Edge Counts
+##### SPARC Node Counts
 
 | **SAB**              | **Count** |
 |----------------------|-----------|
 | UBERON               | 1,552     |
-| api.brain-map.org    | 1,329     |
-| uri.interlex.org     | 893       |
+| MBA                  | 1,327     |
+| NPOKB                | 436       |
 | ILX                  | 174       |
-| www.ncbi.nlm.nih.gov | 122       |
 | CHEBI                | 122       |
+| ENTREZ               | 122       |
 | NIFEXT               | 70        |
 | NLX                  | 56        |
 | NCBITAXON            | 54        |
 | PR                   | 39        |
-| uri.neuinfo.org      | 38        |
-| jaxmice.jax.org      | 31        |
+
+
+##### SPARC Edge Counts
+
+| **Subject SAB** | **Predicate**             | **Object SAB** | **Count** |
+|-----------------|---------------------------|----------------|-----------|
+| UBERON          | produces                  | PUBCHEM        | 34,471    |
+| CL              | produces                  | PUBCHEM        | 6,777     |
+| CLO             | produces                  | PUBCHEM        | 536       |
+| HGNC            | causally influences       | PUBCHEM        | 5,527     |
+| PUBCHEM         | correlated with condition | DOID           | 3,856     |
+| HMDB            | correlated with condition | DOID           | 27        |
+| PUBCHEM         | correlated with condition | HPO            | 77        |
+
+
+ILX   UBERON 260
+
+
 
 ## Additional Datasets
 
