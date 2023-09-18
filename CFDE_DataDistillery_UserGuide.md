@@ -220,6 +220,9 @@ RETURN DISTINCT gene.name,tissue.name,glycoenzyme.name,bin_code.value AS variant
 ### <ins>ERCC</ins>
 
 ##### RBP	 	
+Queries of the assertions relating to extracellular RNA binding proteins (RBPs) are meant to help identify candidate minimally invasive biomarkers of disease. We envision that users would provide three inputs to queries of this data. These inputs include a target biofluid, a set of RBPs that are expressed within the cell type of interest, and a set of genes that are also expressed within the cell type of interest. The following example queries showcase the information encoded within the assertions provided between RBPs, biofluids, and RBP eCLIP peaks. 
+
+The query below first identifies the RBPs that are predicted to be present within the input target biofluid. Next, it identifies the genes among the input set whose genetic coordinates overlap with the coordinates of at least one eCLIP peak of RBPs that are predicted to be present within the target biofluid. 
 
 Query1:
 ```cypher
@@ -232,6 +235,8 @@ MATCH (q)-[:CODE]->(r:Code)
 RETURN DISTINCT c.CodeID AS RBP,r.CodeID AS RBS,b.CodeID AS Gene,a.CodeID AS Biosample;
 ```
 
+The query below differs from the first query in that it considers a different set of RBP loci. In this case, we query genetic loci that are the result of removing overlaps from eCLIP peaks across RBPs.
+
 Query2:
 ```cypher
 MATCH (a:Code {CodeID: 'UBERON 0001088'})
@@ -243,6 +248,8 @@ MATCH (q)-[:overlaps]-(:Concept)-[:CODE]->(b)
 RETURN DISTINCT c.CodeID AS RBP,r.CodeID AS RBS,b.CodeID AS Gene,a.CodeID AS Biosample;
 ```
 
+In the following query, we constrain the queried non-overlapping RBP loci to those that are covered by at least 2 reads in 10 percent of samples taken from the target biofluid of healthy controls available on the exRNA Atlas. 
+
 Query3:
 ```cypher
 MATCH (a:Code {CodeID: 'UBERON 0001088'})
@@ -253,6 +260,8 @@ MATCH (q)-[:molecularly_interacts_with]->(:Concept)<-[:is_subsequence_of]-(r:Con
 MATCH (p)<-[]-(r)-[:overlaps]->(:Concept)-[:CODE]->(b)
 RETURN DISTINCT c.CodeID AS RBP,s.CodeID AS RBS,b.CodeID AS Gene,a.CodeID AS Biosample;
 ```
+
+In our final example query, we add another constraint to the RBP loci. In this case we consider only non-overlapping RBP loci that meet the coverage cutoff stated above, and whose coverage across biofluid-specific control samples in the exRNA Atlas is significantly correlated with the coverage of other loci from the same RBP.
 
 Query4:
 ```cypher
@@ -267,6 +276,8 @@ RETURN DISTINCT c.CodeID AS RBP,s.CodeID AS RBS,b.CodeID AS Gene,a.CodeID AS Bio
 
 ##### Regulatory Element
 
+Knowledge encoded in the assertions relating to regulatory elements allow users to identify active regulatory elements within a specific tissue, get information derived from ChIP-seq experiments to help identify the function of a regulatory element, and the genes whose expression is regulated by specific genetic elements. Our first example query shows how to retrieve the set of regulatory elements active within a specific input tissue.
+
 Query1:
 ```cypher
 MATCH (a:Code {CodeID: 'UBERON 0002367'})
@@ -274,6 +285,8 @@ MATCH (a)<-[:CODE]-(p:Concept)-[:part_of]->(q:Concept)-[:CODE]->(:Code {SAB: 'EN
 MATCH (q)<-[:part_of]-(r:Concept)-[:CODE]->(s:Code {SAB: 'ENCODE.CCRE'})
 RETURN DISTINCT a.CodeID AS Tissue,s.CodeID AS cCRE
 ```
+
+In our next example query, we again retrieve the regulatory elements active within the input tissue. In this case though, we also add the constraint that an active eQTL must reside within the regulatory element.
 
 Query2:
 ```cypher
@@ -283,6 +296,8 @@ MATCH (q)<-[:part_of]-(r:Concept)<-[:located_in]-(:Concept)-[:part_of]->(:Concep
 MATCH (r)-[:CODE]->(s:Code {SAB: 'ENCODE.CCRE'})
 RETURN DISTINCT a.CodeID AS Tissue, s.CodeID AS cCRE
 ```
+
+Our third example query demonstrates how to retrieve information to identify the class of a regulatory element within a specific tissue. In this case, the query results allow the user to determine whether the input regulatory element is enriched within tissue specific ChIP-seq data targeting H3K27Ac, H3K4Me3, and CTCF.
 
 Query3:
 ```cypher
@@ -294,6 +309,8 @@ MATCH (p)-[:isa]->(:Concept)-[:CODE]->(r:Code {SAB: 'ENCODE.CCRE.H3K4ME3'})
 MATCH (p)-[:isa]->(:Concept)-[:CODE]->(s:Code {SAB: 'ENCODE.CCRE.CTCF'})
 RETURN a.CodeID AS Tissue,b.CodeID AS cCRE,q.CODE AS H3K27AC,r.CODE AS H3K4ME3,s.CODE AS CTCF
 ```
+
+In our final example query we show how to retrieve the genes whose body lies within 10 kilobases from an input regulatory element. Transcription of the output genes is likely to be regulated by the input regulatory element.
 
 Query4:
 ```cypher
