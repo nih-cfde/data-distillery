@@ -731,16 +731,12 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 | **Subject SAB** | **Predicate**             | **Object SAB** | **Count** |
 |-----------------|---------------------------|----------------|-----------|
-| UBERON          | produces                  | PUBCHEM        | 34,471    |
-| CL              | produces                  | PUBCHEM        | 6,777     |
-| CLO             | produces                  | PUBCHEM        | 536       |
-| HGNC            | causally influences       | PUBCHEM        | 5,527     |
-| PUBCHEM         | correlated with condition | DOID           | 3,856     |
-| HMDB            | correlated with condition | DOID           | 27        |
-| PUBCHEM         | correlated with condition | HPO            | 77        |
-
-
-ILX   UBERON 260
+| NPOKB           | hasInstanceInTaxon        | NCBI           | 569       |
+| NPOKB           | hasInstanceInTaxon        | SNOMEDCT_US    | 567       |
+| NPOKB           | isa                       | ILX.TR         | 434       |
+| ILX             | isa                       | UBERON         | 385       |
+| ILX             | isa                       | NCI            | 311       |
+| ILX             | isa                       | FMA            | 288       |
 
 
 
