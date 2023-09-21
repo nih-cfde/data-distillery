@@ -207,6 +207,7 @@ MATCH (glycoreaction_code:Code)<-[:CODE]-(glycoreaction_concept:Concept)-[r1:has
 (tissue_concept:Concept)-[:PREF_TERM]-(tissue:Term {name:tissue_name})
 RETURN * LIMIT 1
 ```
+
 The following query will return a table version of the previous query:
 ```cypher
 WITH "Myocardium of left ventricle" AS tissue_name
