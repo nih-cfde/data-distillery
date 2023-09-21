@@ -8,13 +8,13 @@
 --------
 This guide has 4 sections:
 
-1. [Introduction](https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/user_guide/CFDE_DataDistillery_UserGuide.md#introduction)
+1. [Introduction](https://github.com/nih-cfde/data-distillery/blob/main/CFDE_DataDistillery_UserGuide.md#introduction)
 
-2. [Use Cases](https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/user_guide/CFDE_DataDistillery_UserGuide.md#dcc-use-cases)
+2. [Use Cases](https://github.com/nih-cfde/data-distillery/blob/main/CFDE_DataDistillery_UserGuide.md#dcc-use-cases)
 
-3. [Queries to reproduce Data Dictionary figures](https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/user_guide/CFDE_DataDistillery_UserGuide.md#queries-to-reproduce-the-figures-in-the-data-dictionary)
+3. [Queries to reproduce Data Dictionary figures](https://github.com/nih-cfde/data-distillery/blob/main/CFDE_DataDistillery_UserGuide.md#queries-to-reproduce-the-figures-in-the-data-dictionary)
 
-4. [Tips and Tricks](https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/user_guide/CFDE_DataDistillery_UserGuide.md#tips-and-tricks)
+4. [Tips and Tricks](https://github.com/nih-cfde/data-distillery/blob/main/CFDE_DataDistillery_UserGuide.md#tips-and-tricks)
 
 --------
 ## Introduction
@@ -151,7 +151,7 @@ WITH * MATCH (compound_concept:Concept)-[:PREF_TERM]-(compound:Term),
 (metabolite_concept:Concept)-[:PREF_TERM]-(metabolite:Term),
 (tissue_concept:Concept)-[:PREF_TERM]-(tissue:Term) RETURN DISTINCT * LIMIT 1
 ```
-<img src="https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/images/IDG_MW.png" width="800" height="500">
+<img src="https://github.com/nih-cfde/data-distillery/blob/main/images/IDG_MW.png" width="800" height="500">
 
 The following query will return a table version of the previous query:
 ```cypher
@@ -178,7 +178,7 @@ MATCH (motrpac_code:Code {SAB:"MOTRPAC"})<-[:CODE]-(motrpac_concept:Concept)-[r1
 (rat_gene_concept:Concept)-[:CODE]->(rat_gene_code:Code)
 RETURN * LIMIT 1
 ```
-<img src="https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/images/MOTRPAC_LINCS_GTEX.png" width="700" height="580">
+<img src="https://github.com/nih-cfde/data-distillery/blob/main/images/MOTRPAC_LINCS_GTEX.png" width="700" height="580">
 
 The following query will return a table version of the previous query:
 ```cypher
@@ -349,7 +349,7 @@ MATCH (loop_concept:Concept)-[r1:loop_us_start {SAB:'4DN'}
 ]->(assay_type_concept:Concept)-[:PREF_TERM]->(assay_type_term:Term)//Assay type associated with experiments
 RETURN * LIMIT 1
 ```
-<img src="https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/images/4DN.png" width="550" height="450">
+<img src="https://github.com/nih-cfde/data-distillery/blob/main/images/4DN.png" width="550" height="450">
 
 ### <ins>Extracellular RNA Communication Program (ERCC)</ins>
 
@@ -392,7 +392,7 @@ MATCH (glycan_code:Code {SAB:'GLYTOUCAN'})<-[:CODE]-(glycan_concept:Concept)<-[r
 (glycoprotein_concept:Concept)-[r7:has_evidence {SAB:'PROTEOFORM'}]->(evidence_concept:Concept)-[:CODE]->(evidence_code:Code {SAB:'GLYCOPROTEIN.EVIDENCE'})//Evidence
 RETURN * LIMIT 1
 ```
-<img src="https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/images/PROTEOFORM.png" width="900" height="500">
+<img src="https://github.com/nih-cfde/data-distillery/blob/main/images/PROTEOFORM.png" width="900" height="500">
 
 This query uses the `GLYCANS` SAB from the GlyGen data. The query extracts the `GLYGEN`-defined relationships between glycans (SAB:`GLYTOUCAN`) and the asscoiated residues, motifs, glycoreactions, glycoenzymes, glycosequences and source:
 ```cypher
@@ -405,7 +405,7 @@ MATCH (glycan_code:Code {SAB:'GLYTOUCAN'})<-[:CODE]-(glycan_concept:Concept)-[r1
 (glycan_concept:Concept)-[r7:is_from_source {SAB:'GLYCANS'}]->(source_concept:Concept)-[:CODE]->(source_code:Code {SAB:'GLYGEN.SRC'})//Glygen source
 RETURN * LIMIT 1
 ```
-<img src="https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/images/GLYCANS.png" width="750" height="550">
+<img src="https://github.com/nih-cfde/data-distillery/blob/main/images/GLYCANS.png" width="750" height="550">
 
 ### <ins>Genotype Tissue Expression (GTEx)</ins>
 
@@ -434,7 +434,7 @@ The query extracts genes associated with the HubMAP Azimuth dataset (node SAB: `
 ```cypher
 MATCH (azimuth_term:Term)-[:PT]-(azimuth_code:Code {SAB:"AZ"})-[:CODE]-(azimuth_concept:Concept)-[r1 {SAB:"HMAZ"}]->(gene_concept:Concept)-[:CODE]-(gene_code:Code {SAB:"HGNC"}), (azimuth_concept:Concept)-[:isa]->(CL_concept:Concept)-[:CODE]-(CL_code:Code {SAB:"CL"})-[:PT]-(CL_term:Term) RETURN * LIMIT 1
 ```
-<img src="https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/images/AZ.png" width="750" height="500">
+<img src="https://github.com/nih-cfde/data-distillery/blob/main/images/AZ.png" width="750" height="500">
 
 ### <ins>Illuminating the Druggable Genome (IDG)</ins>
 
@@ -503,7 +503,7 @@ RETURN * LIMIT 1
 
 ## Tips and Tricks
 
-- You might notice that some queries have a `MATCH` statement for every line such as these [GTEx queries](https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/user_guide/CFDE_DataDistillery_UserGuide.md#genotype-tissue-expression-gtex), while other queries have a single `MATCH` statement followed by several patterns seperated by a comma such as these [GlyGen queries](https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/user_guide/CFDE_DataDistillery_UserGuide.md#glygen-1). Both styles produce identical query plans, they just represent two different syntax styles.
+- You might notice that some queries have a `MATCH` statement for every line such as these [GTEx queries](https://github.com/nih-cfde/data-distillery/blob/main/CFDE_DataDistillery_UserGuide.md#genotype-tissue-expression-gtex), while other queries have a single `MATCH` statement followed by several patterns seperated by a comma such as these [GlyGen queries](https://github.com/nih-cfde/data-distillery/blob/main/CFDE_DataDistillery_UserGuide.md#glygen-1). Both styles produce identical query plans, they just represent two different syntax styles.
 
 - Most of the queries in this tutorial should not take long to run (<10 seconds). But in general, to speed up the run time of a query it can be helpful to start with the smaller dataset or even a single node if possible. For example, if you know you want to search for a specific gene and the phenotypes it is related to, you would first want to `MATCH` on the gene and then on the relationships to the `HPO` dataset.
 
