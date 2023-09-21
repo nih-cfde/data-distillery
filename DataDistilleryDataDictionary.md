@@ -187,9 +187,13 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 | Total Edges                                      | 455,469 (PROTEOFORM)<br>464,659 (GLYCANS)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | Source Data URL(s)                               | Download from <https://sparql.glygen.org/><br>Data file: <https://sparql.glygen.org/ln2triplestoredata/triples.tar.gz>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 
-##### GlyGen Schema Diagram
+##### GlyGen GLYCANS Schema Diagram
 
-![](images/GlyGen-schema-diagram.png)
+![](images/GlyGen-GLYCANS-schema-diagram.png)
+
+##### GlyGen PROTEOFORM Schema Diagram
+
+![](images/GlyGen-PROTEOFORM-schema-diagram.png)
 
 ##### GlyGen FALDO Node Counts
 
