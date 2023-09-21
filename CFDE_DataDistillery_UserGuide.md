@@ -178,7 +178,7 @@ MATCH (motrpac_code:Code {SAB:"MOTRPAC"})<-[:CODE]-(motrpac_concept:Concept)-[r1
 (rat_gene_concept:Concept)-[:CODE]->(rat_gene_code:Code)
 RETURN * LIMIT 1
 ```
-<img src="images/MOTRPAC_LINCS_GTEX.JPG" width="700" height="580">
+<img src="images/MOTRPAC_LINCS_GTEX.jpg" width="700" height="580">
 
 The following query will return a table version of the previous query:
 ```cypher
