@@ -3,7 +3,7 @@
 ## Guide for exploring the Data Distillery knowledge graph using Cypher
 ---------
 * This guide is meant to be an introduction for how to write Cypher queries to explore the Data Distillery Knowledge Graph (DDKG). A basic understanding of Cypher is assumed. If you are unfamiliar with Cypher please refer to the [Neo4j docs](https://neo4j.com/developer/cypher/). 
-* For documentation concerning how the DDKG is generated or for information about the general schema of the graph please see our [Github docs page](https://ubkg.docs.xconsortia.org). For documentation concerning the specific schema for a DCCs dataset please see our [Data Dictionary](CFDE_DataDistillery_UserGuide.md).
+* For documentation concerning how the DDKG is generated or for information about the general schema of the graph please see our [Github docs page](https://ubkg.docs.xconsortia.org). For documentation concerning the specific schema for a DCCs dataset please see our [Data Dictionary](DataDistilleryDataDictionary.md).
 * It is assumed you are working with the latest version of the DDKG which can be found on [globus](https://app.globus.org/file-manager?origin_id=24c2ee95-146d-4513-a1b3-ac0bfdb7856f&origin_path=%2Fprojects%2Fdata-distillery%2FValidated%2FDistribution%2F). Some queries will fail to return anything if you are working with an older version of the graph.
 --------
 This guide has 4 sections:
@@ -322,7 +322,7 @@ RETURN DISTINCT a.CodeID AS cCRE,p.CodeID AS Gene
 
 
 
-# Queries to reproduce the figures in the [Data Dictionary](CFDE_DataDistillery_UserGuide.md)
+# Queries to reproduce the figures in the [Data Dictionary](DataDistilleryDataDictionary.md)
 
 ### <ins>4D Nucleome (4DN)</ins>
 The following query extracts the `4DN` loop anchor-associated nodes in `HSCLO` (`r1` through `r4`). `r5` finds the donut q-value associated with the loop where `r6` and `r7` retrieve the file and dataset containing a specific loop. `r8` finds which cell type has been used in the Hi-C experiment by `4DN`.
