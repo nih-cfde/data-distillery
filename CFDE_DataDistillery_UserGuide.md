@@ -178,7 +178,7 @@ MATCH (motrpac_code:Code {SAB:"MOTRPAC"})<-[:CODE]-(motrpac_concept:Concept)-[r1
 (rat_gene_concept:Concept)-[:CODE]->(rat_gene_code:Code)
 RETURN * LIMIT 1
 ```
-<img src="images/MOTRPAC_LINCS_GTEX.png" width="700" height="580">
+<img src="images/MOTRPAC_LINCS_GTEX.JPG" width="700" height="580">
 
 The following query will return a table version of the previous query:
 ```cypher
@@ -349,7 +349,7 @@ MATCH (loop_concept:Concept)-[r1:loop_us_start {SAB:'4DN'}
 ]->(assay_type_concept:Concept)-[:PREF_TERM]->(assay_type_term:Term)//Assay type associated with experiments
 RETURN * LIMIT 1
 ```
-<img src="images/4DN-schema-diagram.png" width="550" height="450">
+<img src="images/4DN-schema-diagram.png" width="636" height="517">
 
 ### <ins>Extracellular RNA Communication Program (ERCC)</ins>
 
