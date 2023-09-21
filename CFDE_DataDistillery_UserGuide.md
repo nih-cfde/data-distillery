@@ -3,18 +3,18 @@
 ## Guide for exploring the Data Distillery knowledge graph using Cypher
 ---------
 * This guide is meant to be an introduction for how to write Cypher queries to explore the Data Distillery Knowledge Graph (DDKG). A basic understanding of Cypher is assumed. If you are unfamiliar with Cypher please refer to the [Neo4j docs](https://neo4j.com/developer/cypher/). 
-* For documentation concerning how the DDKG is generated or for information about the general schema of the graph please see our [Github docs page](https://ubkg.docs.xconsortia.org). For documentation concerning the specific schema for a DCCs dataset please see our [Data Dictionary](https://github.com/nih-cfde/data-distillery/blob/main/CFDE_DataDistillery_UserGuide.md).
+* For documentation concerning how the DDKG is generated or for information about the general schema of the graph please see our [Github docs page](https://ubkg.docs.xconsortia.org). For documentation concerning the specific schema for a DCCs dataset please see our [Data Dictionary](CFDE_DataDistillery_UserGuide.md).
 * It is assumed you are working with the latest version of the DDKG which can be found on [globus](https://app.globus.org/file-manager?origin_id=24c2ee95-146d-4513-a1b3-ac0bfdb7856f&origin_path=%2Fprojects%2Fdata-distillery%2FValidated%2FDistribution%2F). Some queries will fail to return anything if you are working with an older version of the graph.
 --------
 This guide has 4 sections:
 
-1. [Introduction](https://github.com/nih-cfde/data-distillery/blob/main/CFDE_DataDistillery_UserGuide.md#introduction)
+1. [Introduction](CFDE_DataDistillery_UserGuide.md#introduction)
 
-2. [Use Cases](https://github.com/nih-cfde/data-distillery/blob/main/CFDE_DataDistillery_UserGuide.md#dcc-use-cases)
+2. [Use Cases](CFDE_DataDistillery_UserGuide.md#dcc-use-cases)
 
-3. [Queries to reproduce Data Dictionary figures](https://github.com/nih-cfde/data-distillery/blob/main/CFDE_DataDistillery_UserGuide.md#queries-to-reproduce-the-figures-in-the-data-dictionary)
+3. [Queries to reproduce Data Dictionary figures](CFDE_DataDistillery_UserGuide.md#queries-to-reproduce-the-figures-in-the-data-dictionary)
 
-4. [Tips and Tricks](https://github.com/nih-cfde/data-distillery/blob/main/CFDE_DataDistillery_UserGuide.md#tips-and-tricks)
+4. [Tips and Tricks](CFDE_DataDistillery_UserGuide.md#tips-and-tricks)
 
 --------
 ## Introduction
@@ -151,7 +151,7 @@ WITH * MATCH (compound_concept:Concept)-[:PREF_TERM]-(compound:Term),
 (metabolite_concept:Concept)-[:PREF_TERM]-(metabolite:Term),
 (tissue_concept:Concept)-[:PREF_TERM]-(tissue:Term) RETURN DISTINCT * LIMIT 1
 ```
-<img src="https://github.com/nih-cfde/data-distillery/blob/main/images/IDG_MW.png" width="800" height="500">
+<img src="images/IDG_MW.png" width="800" height="500">
 
 The following query will return a table version of the previous query:
 ```cypher
@@ -178,7 +178,7 @@ MATCH (motrpac_code:Code {SAB:"MOTRPAC"})<-[:CODE]-(motrpac_concept:Concept)-[r1
 (rat_gene_concept:Concept)-[:CODE]->(rat_gene_code:Code)
 RETURN * LIMIT 1
 ```
-<img src="https://github.com/nih-cfde/data-distillery/blob/main/images/MOTRPAC_LINCS_GTEX.png" width="700" height="580">
+<img src="images/MOTRPAC_LINCS_GTEX.png" width="700" height="580">
 
 The following query will return a table version of the previous query:
 ```cypher
@@ -322,7 +322,7 @@ RETURN DISTINCT a.CodeID AS cCRE,p.CodeID AS Gene
 
 
 
-# Queries to reproduce the figures in the [Data Dictionary](https://github.com/nih-cfde/data-distillery/blob/main/CFDE_DataDistillery_UserGuide.md)
+# Queries to reproduce the figures in the [Data Dictionary](CFDE_DataDistillery_UserGuide.md)
 
 ### <ins>4D Nucleome (4DN)</ins>
 The following query extracts the `4DN` loop anchor-associated nodes in `HSCLO` (`r1` through `r4`). `r5` finds the donut q-value associated with the loop where `r6` and `r7` retrieve the file and dataset containing a specific loop. `r8` finds which cell type has been used in the Hi-C experiment by `4DN`.
@@ -349,7 +349,7 @@ MATCH (loop_concept:Concept)-[r1:loop_us_start {SAB:'4DN'}
 ]->(assay_type_concept:Concept)-[:PREF_TERM]->(assay_type_term:Term)//Assay type associated with experiments
 RETURN * LIMIT 1
 ```
-<img src="https://github.com/nih-cfde/data-distillery/blob/main/images/4DN-schema-diagram.png" width="550" height="450">
+<img src="images/4DN-schema-diagram.png" width="550" height="450">
 
 ### <ins>Extracellular RNA Communication Program (ERCC)</ins>
 
@@ -392,7 +392,7 @@ MATCH (glycan_code:Code {SAB:'GLYTOUCAN'})<-[:CODE]-(glycan_concept:Concept)<-[r
 (glycoprotein_concept:Concept)-[r7:has_evidence {SAB:'PROTEOFORM'}]->(evidence_concept:Concept)-[:CODE]->(evidence_code:Code {SAB:'GLYCOPROTEIN.EVIDENCE'})//Evidence
 RETURN * LIMIT 1
 ```
-<img src="https://github.com/nih-cfde/data-distillery/blob/main/images/GlyGen-PROTEOFORM-schema-diagram.png" width="900" height="500">
+<img src="images/GlyGen-PROTEOFORM-schema-diagram.png" width="900" height="500">
 
 This query uses the `GLYCANS` SAB from the GlyGen data. The query extracts the `GLYGEN`-defined relationships between glycans (SAB:`GLYTOUCAN`) and the asscoiated residues, motifs, glycoreactions, glycoenzymes, glycosequences and source:
 ```cypher
@@ -405,7 +405,7 @@ MATCH (glycan_code:Code {SAB:'GLYTOUCAN'})<-[:CODE]-(glycan_concept:Concept)-[r1
 (glycan_concept:Concept)-[r7:is_from_source {SAB:'GLYCANS'}]->(source_concept:Concept)-[:CODE]->(source_code:Code {SAB:'GLYGEN.SRC'})//Glygen source
 RETURN * LIMIT 1
 ```
-<img src="https://github.com/nih-cfde/data-distillery/blob/main/images/GlyGen-GLYCANS-schema-diagram.png" width="750" height="550">
+<img src="images/GlyGen-GLYCANS-schema-diagram.png" width="750" height="550">
 
 ### <ins>Genotype Tissue Expression (GTEx)</ins>
 
@@ -434,7 +434,7 @@ The query extracts genes associated with the HubMAP Azimuth dataset (node SAB: `
 ```cypher
 MATCH (azimuth_term:Term)-[:PT]-(azimuth_code:Code {SAB:"AZ"})-[:CODE]-(azimuth_concept:Concept)-[r1 {SAB:"HMAZ"}]->(gene_concept:Concept)-[:CODE]-(gene_code:Code {SAB:"HGNC"}), (azimuth_concept:Concept)-[:isa]->(CL_concept:Concept)-[:CODE]-(CL_code:Code {SAB:"CL"})-[:PT]-(CL_term:Term) RETURN * LIMIT 1
 ```
-<img src="https://github.com/nih-cfde/data-distillery/blob/main/images/HuBMAP-Az-schema-diagram.png" width="750" height="500">
+<img src="images/HuBMAP-Az-schema-diagram.png" width="750" height="500">
 
 ### <ins>Illuminating the Druggable Genome (IDG)</ins>
 
@@ -503,7 +503,7 @@ RETURN * LIMIT 1
 
 ## Tips and Tricks
 
-- You might notice that some queries have a `MATCH` statement for every line such as these [GTEx queries](https://github.com/nih-cfde/data-distillery/blob/main/CFDE_DataDistillery_UserGuide.md#genotype-tissue-expression-gtex), while other queries have a single `MATCH` statement followed by several patterns seperated by a comma such as these [GlyGen queries](https://github.com/nih-cfde/data-distillery/blob/main/CFDE_DataDistillery_UserGuide.md#glygen-1). Both styles produce identical query plans, they just represent two different syntax styles.
+- You might notice that some queries have a `MATCH` statement for every line such as these [GTEx queries](CFDE_DataDistillery_UserGuide.md#genotype-tissue-expression-gtex), while other queries have a single `MATCH` statement followed by several patterns seperated by a comma such as these [GlyGen queries](CFDE_DataDistillery_UserGuide.md#glygen-1). Both styles produce identical query plans, they just represent two different syntax styles.
 
 - Most of the queries in this tutorial should not take long to run (<10 seconds). But in general, to speed up the run time of a query it can be helpful to start with the smaller dataset or even a single node if possible. For example, if you know you want to search for a specific gene and the phenotypes it is related to, you would first want to `MATCH` on the gene and then on the relationships to the `HPO` dataset.
 
