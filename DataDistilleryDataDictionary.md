@@ -762,9 +762,9 @@ This set of assertions maps human phenotype ontology (HPO) nodes to mammalian ph
 
 This set of assertions maps HGNC gene nodes to human phenotype ontology (HPO) nodes through the 'associated_with' relationship. There are 671,046 HGNCHPO mappings. These assertions can be queried by specifying the SAB property as HGNCHPO on the 'associated_with' relationship.
 
-### HCOPHGNC
+### HGNCHCOP
 
-This set of assertions maps mouse gene nodes (HCOP) to human gene nodes (HGNC). Mouse gene nodes are referred to as 'HCOP' in the Data Distillery Knowledge Graph because the HGNC Comparison of Orthology Predictions ([HCOP](https://www.genenames.org/tools/hcop/)) tool was used to generate these mappings. The 'in_1_to_1_orthology_relationship_with' is used to connect the HGNC and HCOP nodes. There are 67,027 HCOPHGNC mappings. These assertions can be queried by specifying the SAB property as HCOPHGNC on the 'in_1_to_1_orthology_relationship_with' relationship.
+This set of assertions maps mouse gene nodes (HCOP) to human gene nodes (HGNC). Mouse gene nodes are referred to as 'HCOP' in the Data Distillery Knowledge Graph because the HGNC Comparison of Orthology Predictions ([HCOP](https://www.genenames.org/tools/hcop/)) tool was used to generate these mappings. The 'in_1_to_1_orthology_relationship_with' is used to connect the HGNC and HCOP nodes. There are 67,027 HGNCHCOP mappings. These assertions can be queried by specifying the SAB property as HCOPHGNC on the 'in_1_to_1_orthology_relationship_with' relationship.
 
 ### HCOPMP
 
