@@ -1,16 +1,24 @@
-# Guide for exploring the Data Distillery knowledge graph using Cypher
+# User Guide for the CFDE Data Distillery Knowledge Graph
 
-* This guide is meant to be an introduction for how to write Cypher queries to explore the Data Distillery Knowledge graph. A basic understanding of Cypher is assumed. If you are unfamiliar with Cypher please refer to the [Neo4j docs](https://neo4j.com/developer/cypher/). 
-* For documentation concerning how the Data Distillery knowledge graph is generated or for information about the general schema of the graph please see our [github docs page](https://ubkg.docs.xconsortia.org). For documentation concerning the specific schema for a DCCs dataset please see our [Data Dictionary](https://docs.google.com/document/d/1ubKqkQb40rC7jKRxY9z-SxtsdKqRNZg3Nvds8SpTIbM/edit).
-* It is assumed you are working with the latest version of the Data Distillery graph which can be found on [globus](https://app.globus.org/file-manager?origin_id=24c2ee95-146d-4513-a1b3-ac0bfdb7856f&origin_path=%2Fprojects%2Fdata-distillery%2FValidated%2FDistribution%2F). Some queries will fail to return anything if you are working with an older version of the graph.
+## Guide for exploring the Data Distillery knowledge graph using Cypher
+---------
+* This guide is meant to be an introduction for how to write Cypher queries to explore the Data Distillery Knowledge Graph (DDKG). A basic understanding of Cypher is assumed. If you are unfamiliar with Cypher please refer to the [Neo4j docs](https://neo4j.com/developer/cypher/). 
+* For documentation concerning how the DDKG is generated or for information about the general schema of the graph please see our [Github docs page](https://ubkg.docs.xconsortia.org). For documentation concerning the specific schema for a DCCs dataset please see our [Data Dictionary](DataDistilleryDataDictionary.md).
+* It is assumed you are working with the latest version of the DDKG which can be found on [globus](https://app.globus.org/file-manager?origin_id=24c2ee95-146d-4513-a1b3-ac0bfdb7856f&origin_path=%2Fprojects%2Fdata-distillery%2FValidated%2FDistribution%2F). Some queries will fail to return anything if you are working with an older version of the graph.
 --------
-[Jump to Use Cases](https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/user_guide/CFDE_DataDistillery_UserGuide.md#dcc-use-cases)
+This guide has 4 sections:
 
-[Jump to Queries to reproduce Data Dictionary figures](https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/user_guide/CFDE_DataDistillery_UserGuide.md#queries-to-reproduce-the-figures-in-the-data-dictionary)
+1. [Introduction](CFDE_DataDistillery_UserGuide.md#introduction)
 
-[Jump to Tips and Tricks](https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/user_guide/CFDE_DataDistillery_UserGuide.md#tips-and-tricks)
+2. [Use Cases](CFDE_DataDistillery_UserGuide.md#dcc-use-cases)
+
+3. [Queries to reproduce Data Dictionary figures](CFDE_DataDistillery_UserGuide.md#queries-to-reproduce-the-figures-in-the-data-dictionary)
+
+4. [Tips and Tricks](CFDE_DataDistillery_UserGuide.md#tips-and-tricks)
 
 --------
+## Introduction
+
 ### The simplest way to find a Code in the graph is to search for it using it's source abbreviation (SAB).
 For a list of all Data Distillery SABs see [here](https://ubkg.docs.xconsortia.org/contexts/#data-distillery-context).
 #### 1. How can I return a Code node from a specific ontology/dataset, for example an HGNC Code?
@@ -36,7 +44,7 @@ RETURN *
 LIMIT 1
 ```
 
-All of these are equivalent, although sometimes it can be helpful to use the `WHERE` keyword combined with `STARTS WITH` or `CONTAINS` if you can't remember a specific SAB exactly.
+All of these are equivalent, although sometimes it can be helpful to use the `WHERE` keyword combined with `STARTS WITH` or `CONTAINS` if you can't remember how a specific SAB is spelled.
 
 For example, if you know you want to use an `ENCODE` SAB in your query but can't remember the exact spelling you can simply return all SABs starting with 'ENCODE':
 ```cypher
@@ -45,14 +53,15 @@ WITH DISTINCT code.SAB AS encode_sabs
 RETURN collect(encode_sabs)
 ```
 
-(the above query should return `["ENCODE.CCRE", "ENCODE.CCRE.ACTIVITY", "ENCODE.CCRE.CTCF", "ENCODE.CCRE.H3K27AC", "ENCODE.CCRE.H3K4ME3", "ENCODE.RBS.150.NO.OVERLAP", "ENCODE.RBS.HEPG2", "ENCODE.RBS.HEPG2.K562", "ENCODE.RBS.K562"]`)
+(the query above should return `["ENCODE.CCRE", "ENCODE.CCRE.ACTIVITY", "ENCODE.CCRE.CTCF", "ENCODE.CCRE.H3K27AC", "ENCODE.CCRE.H3K4ME3", "ENCODE.RBS.150.NO.OVERLAP", "ENCODE.RBS.HEPG2", "ENCODE.RBS.HEPG2.K562", "ENCODE.RBS.K562"]`).
 
-...or if you want to include multiple SABs from a DCC (this will return `GTEXEXP` and `GTEXEQTL`):
+...or if you want to include multiple SABs from a DCC:
 ```cypher
 MATCH (code:Code) WHERE code.SAB CONTAINS 'GTEX'
 RETURN DISTINCT code.SAB
 ```
 
+(the query above should return `GTEXEXP` and `GTEXEQTL`).
 
 #### 2. How can I return a Code node and its Concept node from a specific ontology/dataset, for example an HGNC Code node and its Concept node?
 Every Code node is connected to a Concept node by a 'CODE' relationship:
@@ -63,7 +72,7 @@ LIMIT 1
 ```
 
 #### 3. To return the human-readable string that a Code represents you can return the Term node along with the Code. 
-Note: Not all Codes have Terms attached to them. If a Code does have Term nodes then it will almost always have a 'preferred term'. This 'preferred term' is always attached to it's Code by the 'PT' relationship:
+Note: Not all Code nodes have Terms attached to them. If a Code does have Term nodes then it will almost always have a 'preferred term'. This 'preferred term' is always attached to it's Code by the 'PT' relationship:
 
 ```cypher
 MATCH (hgnc_code:Code {SAB:'HGNC'})-[:PT]-(term:Term)
@@ -81,13 +90,12 @@ LIMIT 1
 #### 4. Ontologies/datasets are connected to one another through Concept-Concept relationships, so you must query the concept space to find these relationships.
 Return an `HGNC` to `GO` path (code)-(concept)-(concept)-(code):
 ```cypher
-MATCH (code:Code {SAB:'HGNC'})-[:CODE]-(concept:Concept)-[r]-(concept2:Concept)-[:CODE]-(code2:Code {SAB:'GO'})
+MATCH (code1:Code {SAB:'HGNC'})-[:CODE]-(concept1:Concept)-[r]-(concept2:Concept)-[:CODE]-(code2:Code {SAB:'GO'})
 RETURN * 
 LIMIT 1
 ```
 
-
-#### 5. Another way to query relationships between 2 ontologies/datasets without necessarily including the Code nodes on either end of the query is to know the SAB and/or TYPE of relationship. It's important to realize that while every Code has an SAB that identifies what ontology/dataset it belongs to, relationships in the graph also have SABs.
+#### 5. Another way to query relationships between 2 ontologies/datasets without necessarily including the Code nodes (and specifying SABs) on either end of the query is to know the SAB of the relationship and/or TYPE of relationship. It's important to realize that while every Code has an SAB that identifies what ontology/dataset it belongs to, relationships in the graph also have SABs.
 
 In this example, the 'type' of relationship is `process_involves_gene` and the SAB is `NCI`:
 ```cypher
@@ -102,8 +110,9 @@ It can be helpful to return the 'type' and 'SAB' of the relationship between Con
 MATCH (code:Code {SAB:'HGNC'})-[:CODE]-(concept:Concept)-[r]-(concept2:Concept)-[:CODE]-(code2:Code {SAB:'GO'})
 RETURN DISTINCT code.SAB, type(r), r.SAB, code2.SAB
 ```
-#### 6. How can I find out what relationships exist between my ontology/dataset and other ontologies/datasets
-If you simply want to find the relationship 'types' and 'SABs' between a dataset of interest, for example `HGNC`, and all other datasets you can write something like this: 
+
+#### 6. How can I find out what relationships exist between my ontology/dataset and other ontologies/datasets?
+If you simply want to find the relationship 'types' and 'SABs' between a dataset of interest (for example `HGNC`) and all other datasets you can write something like this: 
 ```cypher
 MATCH (code:Code {SAB:'HGNC'})-[:CODE]-(concept:Concept)-[r]-(concept2:Concept)-[:CODE]-(code2:Code)
 RETURN DISTINCT code.SAB AS hgnc_start_code, type(r) AS edge_TYPE, r.SAB AS edge_SAB,  code2.SAB AS SAB_end_code
@@ -123,17 +132,16 @@ LIMIT 10
 
 
 
-# DCC Use Cases
+## DCC Use Cases
 
 
 ### <ins>IDG and Metabolomics Workbench (MW)</ins>
 
-For a disease (condition) in Metabolomics Workbench data find all IDG and GTEx data that may be related by disease and tissue type
-For example, if a study would like to propose biomarkers (MW) associated with the use of a certain drug (IDG) in association with a medical condition.
-Query description: intersection of MW and IDG; compounds that regulate products of genes (IDG) that causally influence metabolites correlated with conditions (MW), with tissues and conditions directly connected through a single relationship (e.g. DOID).
+For a disease (condition) in Metabolomics Workbench data find all `IDG` and `GTEX` data that may be related by disease and tissue type
+For example, suppose a study would like to find biomarkers (`MW`) associated with the use of a certain drug (`IDG`) in association with a medical condition.
+Query description: intersection of `MW` and `IDG`; compounds that regulate products of genes (`IDG`) that causally influence metabolites correlated with conditions (`MW`), with tissues and conditions directly connected through a single relationship (e.g. `DOID`).
 Disease-tissue relationships are used as a filter to obtain metabolite-tissue-condition triangles that are affected by a certain compound through gene product perturbations.
 
-Graphical Reprentation 
 ```cypher
 MATCH (compound_concept:Concept)-[r1:bioactivity {SAB:"IDGP"}]->(protein_concept:Concept)-[r2:gene_product_of {SAB:"UNIPROTKB"}]->(gene_concept:Concept)-[r3:causally_influences {SAB:"MW"}]->(metabolite_concept:Concept)-[r4:correlated_with_condition {SAB:"MW"}]->(condition_concept:Concept)-[]->(tissue_concept:Concept)<-[r5:produced_by {SAB:"MW"}]-(metabolite_concept:Concept) 
 WITH * MATCH (compound_concept:Concept)-[:PREF_TERM]-(compound:Term),
@@ -143,9 +151,9 @@ WITH * MATCH (compound_concept:Concept)-[:PREF_TERM]-(compound:Term),
 (metabolite_concept:Concept)-[:PREF_TERM]-(metabolite:Term),
 (tissue_concept:Concept)-[:PREF_TERM]-(tissue:Term) RETURN DISTINCT * LIMIT 1
 ```
-<img src="https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/images/IDG_MW.png" width="800" height="500">
+<img src="images/IDG_MW.png" width="800" height="500">
 
-Tabular Output
+The following query will return a table version of the previous query:
 ```cypher
 MATCH (compound_concept:Concept)-[r1:bioactivity {SAB:"IDGP"}]->(protein_concept:Concept)-[r2:gene_product_of {SAB:"UNIPROTKB"}]->(gene_concept:Concept)-[r3:causally_influences {SAB:"MW"}]->(metabolite_concept:Concept)-[r4:correlated_with_condition {SAB:"MW"}]->(condition_concept:Concept)-[]->(tissue_concept:Concept)<-[r5:produced_by {SAB:"MW"}]-(metabolite_concept:Concept) 
 WITH * MATCH (compound_concept:Concept)-[:PREF_TERM]-(compound:Term),
@@ -157,8 +165,8 @@ WITH * MATCH (compound_concept:Concept)-[:PREF_TERM]-(compound:Term),
 ```
 ### <ins>MOTRPAC, LINCS and GTEx</ins>
 
-MoTrPAC Genes affected by exercise, are expressed in matched tissues in humans in GTEx, that are either matches or inverse matches of a perturbation signal in LINCS = compounds or perturbations that might promote or interfere with exercise benefit
-Graphical Reprentation 
+This query identifies `MOTRPAC` genes that are 1) affected by exercise, 2) are expressed in matched tissues in humans in `GTEX`, and 3) that are either matches or inverse matches of a perturbation signal in `LINCS`.
+
 ```cypher
 MATCH (motrpac_code:Code {SAB:"MOTRPAC"})<-[:CODE]-(motrpac_concept:Concept)-[r1:associated_with]->(rat_gene_concept:Concept)-[r2:has_human_ortholog]->(hgnc_concept:Concept)<-[r3 {SAB:"LINCS"}]-(perturbagen_concept:Concept),
 (motrpac_concept:Concept)-[r4:located_in]->(tissue_concept_1:Concept)-[r5:part_of]-(tissue_concept_2:Concept)-[r6:expresses {SAB:"GTEXEXP"}]->(gtex_concept:Concept)-[r7:expressed_in {SAB:"GTEXEXP"}]-(hgnc_concept:Concept),
@@ -170,9 +178,9 @@ MATCH (motrpac_code:Code {SAB:"MOTRPAC"})<-[:CODE]-(motrpac_concept:Concept)-[r1
 (rat_gene_concept:Concept)-[:CODE]->(rat_gene_code:Code)
 RETURN * LIMIT 1
 ```
-<img src="https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/images/MOTRPAC_LINCS_GTEX.png" width="700" height="580">
+<img src="images/MOTRPAC_LINCS_GTEX.jpg" width="700" height="580">
 
-Tabular Output
+The following query will return a table version of the previous query:
 ```cypher
 MATCH (motrpac_code:Code {SAB:"MOTRPAC"})<-[:CODE]-(motrpac_concept:Concept)-[r1:associated_with]->(rat_gene_concept:Concept)-[r2:has_human_ortholog]->(hgnc_concept:Concept)<-[r3 {SAB:"LINCS"}]-(perturbagen_concept:Concept),
 (motrpac_concept:Concept)-[r4:located_in]->(tissue_concept_1:Concept)-[r5:part_of]-(tissue_concept_2:Concept)-[r6:expresses {SAB:"GTEXEXP"}]->(gtex_concept:Concept)-[r7:expressed_in {SAB:"GTEXEXP"}]-(hgnc_concept:Concept),
@@ -187,12 +195,10 @@ RETURN DISTINCT motrpac_code.CODE AS MoTrPac_DS, rat_gene_code.CODE AS rat_gene,
 
 ### <ins>GlyGen, KF and GTEx</ins>
 
-Birth defects could be caused by dysregulation of glycosylation  
-Certain heart defects have been shown to be associated with loss of glycosylation (e.g. heterotaxy). KF heart defect cohort (711 subjects) may have evidence of genetic variants affecting glycosylation genes.
-KF deleterious variants that lead to loss of glycosylation by affecting glycoenzymes  and glycoenzyme expression in the GTEx liver dataset 
-Query Description: Intersection of GLYGEN, KF and GTEx. The query retrieves Glycoreactions {SAB:”GLYCOSYLTRANSFERASE.REACTION”} and subsequently Glycoenzymes data from GLYCANS dataset. Associated genes, their expression and variant count are obtained from GTEXEXP and KF datatsets respectively. KF and GTEx data can be utilized to filter the results.
+Birth defects could be caused by dysregulation of glycosylation (PMC6331365). Certain heart defects have been shown to be associated with loss of glycosylation (e.g. heterotaxy, PMC3869867). KF heart defect cohort (711 subjects) may have evidence of genetic variants affecting glycosylation genes. A question could be, which KF deleterious variants could lead to loss of glycosylation by affecting glycoenzymes and glycoenzyme expression, specifically for those genes found in the GTEx heart dataset ?
 
-Graphical Representation
+Query Description: Intersection of `GLYGEN`, `KF` and `GTEX`. The query retrieves Glycoreactions {SAB:”GLYCOSYLTRANSFERASE.REACTION”} and subsequently Glycoenzymes data from GLYCANS dataset. Associated genes, their expression and variant count are obtained from `GTEXEXP` and `KF` datatsets respectively. 
+
 ```cypher
 WITH "Myocardium of left ventricle" AS tissue_name
 MATCH (glycoreaction_code:Code)<-[:CODE]-(glycoreaction_concept:Concept)-[r1:has_enzyme_protein {SAB:"GLYCANS"}]->(glycoenzyme_concept:Concept)-[r2:gene_product_of]->(gene_concept:Concept)-[r3]-(bin_concept:Concept)-[:CODE]->(bin_code:Code {SAB:"KFGENEBIN"}),(tissue_concept:Concept)-[r4:expresses {SAB:"GTEXEXP"}]->(gtexexp_concept:Concept)-[r5 {SAB:"GTEXEXP"}]->(gene_concept:Concept),(gtexexp_concept:Concept)-[r6:has_expression {SAB:"GTEXEXP"}]->(exp_concept:Concept)-[:CODE]-(exp_code:Code),
@@ -201,7 +207,8 @@ MATCH (glycoreaction_code:Code)<-[:CODE]-(glycoreaction_concept:Concept)-[r1:has
 (tissue_concept:Concept)-[:PREF_TERM]-(tissue:Term {name:tissue_name})
 RETURN * LIMIT 1
 ```
-Tabular Output
+
+The following query will return a table version of the previous query:
 ```cypher
 WITH "Myocardium of left ventricle" AS tissue_name
 MATCH (glycoreaction_code:Code)<-[:CODE]-(glycoreaction_concept:Concept)-[r1:has_enzyme_protein {SAB:"GLYCANS"}]->(glycoenzyme_concept:Concept)-[r2:gene_product_of]->(gene_concept:Concept)-[r3]-(bin_concept:Concept)-[:CODE]->(bin_code:Code {SAB:"KFGENEBIN"}),(tissue_concept:Concept)-[r4:expresses {SAB:"GTEXEXP"}]->(gtexexp_concept:Concept)-[r5 {SAB:"GTEXEXP"}]->(gene_concept:Concept),(gtexexp_concept:Concept)-[r6:has_expression {SAB:"GTEXEXP"}]->(exp_concept:Concept)-[:CODE]-(exp_code:Code),
@@ -214,6 +221,9 @@ RETURN DISTINCT gene.name,tissue.name,glycoenzyme.name,bin_code.value AS variant
 ### <ins>ERCC</ins>
 
 ##### RBP	 	
+Queries of the assertions relating to extracellular RNA binding proteins (RBPs) are meant to help identify candidate minimally invasive biomarkers of disease. We envision that users would provide three inputs to queries of this data. These inputs include a target biofluid, a set of RBPs that are expressed within the cell type of interest, and a set of genes that are also expressed within the cell type of interest. The following example queries showcase the information encoded within the assertions provided between RBPs, biofluids, and RBP eCLIP peaks. 
+
+The query below first identifies the RBPs that are predicted to be present within the input target biofluid. Next, it identifies the genes among the input set whose genetic coordinates overlap with the coordinates of at least one eCLIP peak of RBPs that are predicted to be present within the target biofluid. 
 
 Query1:
 ```cypher
@@ -226,6 +236,8 @@ MATCH (q)-[:CODE]->(r:Code)
 RETURN DISTINCT c.CodeID AS RBP,r.CodeID AS RBS,b.CodeID AS Gene,a.CodeID AS Biosample;
 ```
 
+The query below differs from the first query in that it considers a different set of RBP loci. In this case, we query genetic loci that are the result of removing overlaps from eCLIP peaks across RBPs.
+
 Query2:
 ```cypher
 MATCH (a:Code {CodeID: 'UBERON 0001088'})
@@ -237,6 +249,8 @@ MATCH (q)-[:overlaps]-(:Concept)-[:CODE]->(b)
 RETURN DISTINCT c.CodeID AS RBP,r.CodeID AS RBS,b.CodeID AS Gene,a.CodeID AS Biosample;
 ```
 
+In the following query, we constrain the queried non-overlapping RBP loci to those that are covered by at least 2 reads in 10 percent of samples taken from the target biofluid of healthy controls available on the exRNA Atlas. 
+
 Query3:
 ```cypher
 MATCH (a:Code {CodeID: 'UBERON 0001088'})
@@ -247,6 +261,8 @@ MATCH (q)-[:molecularly_interacts_with]->(:Concept)<-[:is_subsequence_of]-(r:Con
 MATCH (p)<-[]-(r)-[:overlaps]->(:Concept)-[:CODE]->(b)
 RETURN DISTINCT c.CodeID AS RBP,s.CodeID AS RBS,b.CodeID AS Gene,a.CodeID AS Biosample;
 ```
+
+In our final example query, we add another constraint to the RBP loci. In this case we consider only non-overlapping RBP loci that meet the coverage cutoff stated above, and whose coverage across biofluid-specific control samples in the exRNA Atlas is significantly correlated with the coverage of other loci from the same RBP.
 
 Query4:
 ```cypher
@@ -261,6 +277,8 @@ RETURN DISTINCT c.CodeID AS RBP,s.CodeID AS RBS,b.CodeID AS Gene,a.CodeID AS Bio
 
 ##### Regulatory Element
 
+Knowledge encoded in the assertions relating to regulatory elements allow users to identify active regulatory elements within a specific tissue, get information derived from ChIP-seq experiments to help identify the function of a regulatory element, and the genes whose expression is regulated by specific genetic elements. Our first example query shows how to retrieve the set of regulatory elements active within a specific input tissue.
+
 Query1:
 ```cypher
 MATCH (a:Code {CodeID: 'UBERON 0002367'})
@@ -268,6 +286,8 @@ MATCH (a)<-[:CODE]-(p:Concept)-[:part_of]->(q:Concept)-[:CODE]->(:Code {SAB: 'EN
 MATCH (q)<-[:part_of]-(r:Concept)-[:CODE]->(s:Code {SAB: 'ENCODE.CCRE'})
 RETURN DISTINCT a.CodeID AS Tissue,s.CodeID AS cCRE
 ```
+
+In our next example query, we again retrieve the regulatory elements active within the input tissue. In this case though, we also add the constraint that an active eQTL must reside within the regulatory element.
 
 Query2:
 ```cypher
@@ -277,6 +297,8 @@ MATCH (q)<-[:part_of]-(r:Concept)<-[:located_in]-(:Concept)-[:part_of]->(:Concep
 MATCH (r)-[:CODE]->(s:Code {SAB: 'ENCODE.CCRE'})
 RETURN DISTINCT a.CodeID AS Tissue, s.CodeID AS cCRE
 ```
+
+Our third example query demonstrates how to retrieve information to identify the class of a regulatory element within a specific tissue. In this case, the query results allow the user to determine whether the input regulatory element is enriched within tissue specific ChIP-seq data targeting H3K27Ac, H3K4Me3, and CTCF.
 
 Query3:
 ```cypher
@@ -289,6 +311,8 @@ MATCH (p)-[:isa]->(:Concept)-[:CODE]->(s:Code {SAB: 'ENCODE.CCRE.CTCF'})
 RETURN a.CodeID AS Tissue,b.CodeID AS cCRE,q.CODE AS H3K27AC,r.CODE AS H3K4ME3,s.CODE AS CTCF
 ```
 
+In our final example query we show how to retrieve the genes whose body lies within 10 kilobases from an input regulatory element. Transcription of the output genes is likely to be regulated by the input regulatory element.
+
 Query4:
 ```cypher
 MATCH (a:Code {CodeID: 'ENCODE.CCRE EH38E3881508'})
@@ -296,18 +320,12 @@ MATCH (a)<-[:CODE]-(:Concept)-[:part_of]->(:Concept)-[:regulates]->(:Concept)-[:
 RETURN DISTINCT a.CodeID AS cCRE,p.CodeID AS Gene
 ```
 
-### <ins>MoTrPAC</ins>
-
-### <ins></ins>
 
 
-
-
-
-# Queries to reproduce the figures in the [Data Dictionary](https://docs.google.com/document/d/1ubKqkQb40rC7jKRxY9z-SxtsdKqRNZg3Nvds8SpTIbM/edit)
+# Queries to reproduce the figures in the [Data Dictionary](DataDistilleryDataDictionary.md)
 
 ### <ins>4D Nucleome (4DN)</ins>
-The following query extracts the `4DN` loop anchor-associated nodes in `HSCLO` (`r1` through `r4`). `r5` find the donut q-value associated with the loop where `r6` and `r7` retrieve the file and dataset containing a specific loop. `r8` finds which cell type has been used in the Hi-C experiment by `4DN`.
+The following query extracts the `4DN` loop anchor-associated nodes in `HSCLO` (`r1` through `r4`). `r5` finds the donut q-value associated with the loop where `r6` and `r7` retrieve the file and dataset containing a specific loop. `r8` finds which cell type has been used in the Hi-C experiment by `4DN`.
 ```cypher
 MATCH (loop_concept:Concept)-[r1:loop_us_start {SAB:'4DN'}
 ]->(us_start_concept:Concept)-[:CODE]->(us_start_code:Code),//Loop upstream start node in HSCLO
@@ -331,7 +349,7 @@ MATCH (loop_concept:Concept)-[r1:loop_us_start {SAB:'4DN'}
 ]->(assay_type_concept:Concept)-[:PREF_TERM]->(assay_type_term:Term)//Assay type associated with experiments
 RETURN * LIMIT 1
 ```
-<img src="https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/images/4DN.png" width="550" height="450">
+<img src="images/4DN-schema-diagram.png" width="636" height="517">
 
 ### <ins>Extracellular RNA Communication Program (ERCC)</ins>
 
@@ -362,7 +380,8 @@ RETURN * LIMIT 1
 
 ### <ins>GlyGen</ins>
 
-PROTEOFORM query: the following query extracts the `GLYGEN`-defined relationships between glycans (SAB:`GLYTOUCAN`) and the glycoprotein complex information including the protein, isoform, glycosylation site (location and amino-acid) and the evidence for such a pattern.
+This query uses the `PROTEOFORM` SAB in GlyGen data. The query extracts the `GLYGEN`-defined relationships between glycans (SAB:`GLYTOUCAN`) and the glycoprotein complex information including the protein, isoform, glycosylation site (location and amino-acid) and the evidence for such a pattern.
+
 ```cypher
 MATCH (glycan_code:Code {SAB:'GLYTOUCAN'})<-[:CODE]-(glycan_concept:Concept)<-[r1:has_saccharide {SAB:'PROTEOFORM'}]-(site_concept:Concept)-[:CODE]->(site_code:Code {SAB:'GLYCOSYLATION.SITE'}),//Saccaride and glycosylation site
 (site_concept:Concept)-[r2:location {SAB:'PROTEOFORM'}]->(location_concept:Concept)-[:CODE]->(location_code:Code {SAB:'GLYGEN.LOCATION'})-[:PROTEOFORM_PT]->(location_term:Term),//Location
@@ -373,9 +392,9 @@ MATCH (glycan_code:Code {SAB:'GLYTOUCAN'})<-[:CODE]-(glycan_concept:Concept)<-[r
 (glycoprotein_concept:Concept)-[r7:has_evidence {SAB:'PROTEOFORM'}]->(evidence_concept:Concept)-[:CODE]->(evidence_code:Code {SAB:'GLYCOPROTEIN.EVIDENCE'})//Evidence
 RETURN * LIMIT 1
 ```
-<img src="https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/images/PROTEOFORM.png" width="900" height="500">
+<img src="images/GlyGen-PROTEOFORM-schema-diagram.png" width="900" height="500">
 
-GLYCANS query: the following query extracts the `GLYGEN`-defined relationships between glycans (SAB:`GLYTOUCAN`) and the asscoiated residues, motifs, glycoreactions, glycoenzymes, glycosequences and source:
+This query uses the `GLYCANS` SAB from the GlyGen data. The query extracts the `GLYGEN`-defined relationships between glycans (SAB:`GLYTOUCAN`) and the asscoiated residues, motifs, glycoreactions, glycoenzymes, glycosequences and source:
 ```cypher
 MATCH (glycan_code:Code {SAB:'GLYTOUCAN'})<-[:CODE]-(glycan_concept:Concept)-[r1:synthesized_by {SAB:'GLYCANS'}]->(glycosylation_concept:Concept)-[:CODE]->(glycosylation_code:Code {SAB:'GLYCOSYLTRANSFERASE.REACTION'}),//Glycans and glycosyltransferase reactions
 (glycan_concept:Concept)-[r2:has_canonical_residue {SAB:'GLYCANS'}]->(residue_concept:Concept)-[:CODE]->(residue_code:Code {SAB:'GLYGEN.RESIDUE'}),//Residues
@@ -386,11 +405,11 @@ MATCH (glycan_code:Code {SAB:'GLYTOUCAN'})<-[:CODE]-(glycan_concept:Concept)-[r1
 (glycan_concept:Concept)-[r7:is_from_source {SAB:'GLYCANS'}]->(source_concept:Concept)-[:CODE]->(source_code:Code {SAB:'GLYGEN.SRC'})//Glygen source
 RETURN * LIMIT 1
 ```
-<img src="https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/images/GLYCANS.png" width="750" height="550">
+<img src="images/GlyGen-GLYCANS-schema-diagram.png" width="750" height="550">
 
 ### <ins>Genotype Tissue Expression (GTEx)</ins>
 
-Show the `GTEXEXP` node and its three edges to an `HGNC` node, an `UBERON` node and an `EXPBINS` node. The `EXPBINS` node is where the median TPM value from GTEx is located (on the upperbound and lowerbound properties).
+This query shows the `GTEXEXP` node and its three edges as linked to an `HGNC` node, an `UBERON` node and an `EXPBINS` node. The `EXPBINS` node contains the median TPM value from `GTEX` (the upperbound and lowerbound properties).
 ```cypher
 MATCH (gtex_cui:Concept)-[r0:CODE]-(gtex_exp_code:Code {SAB:'GTEXEXP'}) 
 MATCH (gtex_cui)-[r1:expressed_in]-(hgnc_concept:Concept)-[r2:CODE]-(hgnc_code:Code {SAB:'HGNC'})
@@ -399,7 +418,7 @@ MATCH (gtex_cui)-[r5:has_expression]-(expbin_concept:Concept)-[r6:CODE]-(expbin_
 RETURN * LIMIT 1
 ```
 
-Show the `GTEXEQTL` node and its three edges to an `HGNC` node, an `UBERON` node and a `PVALUEBINS` node. The `PVALUEBINS` node is where the p-value for the eQTL is located (on the upperbound and lowerbound properties).
+This query shows the `GTEXEQTL` node and its three edges as linked to an `HGNC` node, an `UBERON` node and a `PVALUEBINS` node. The `PVALUEBINS` node contains the p-value for the eQTL (the upperbound and lowerbound properties).
 ```cypher
 MATCH (gtex_cui:Concept)-[r0:CODE]-(gtex_exp_code:Code {SAB:'GTEXEQTL'}) 
 MATCH (gtex_cui)-[r1]-(hgnc_concept:Concept)-[r2:CODE]-(hgnc_code:Code {SAB:'HGNC'})
@@ -410,16 +429,16 @@ RETURN * LIMIT 1
 
 ### <ins>The Human BioMolecular Atlas Program (HuBMAP)</ins>
 
-The query extracts genes associated with the `HubMAP Azimuth` clusters in human heart, liver and kidney.
+The query extracts genes associated with the HubMAP Azimuth dataset (node SAB: `AZ`, edge SAB: `HMAZ`) clusters in human heart, liver and kidney tissues.
 
 ```cypher
 MATCH (azimuth_term:Term)-[:PT]-(azimuth_code:Code {SAB:"AZ"})-[:CODE]-(azimuth_concept:Concept)-[r1 {SAB:"HMAZ"}]->(gene_concept:Concept)-[:CODE]-(gene_code:Code {SAB:"HGNC"}), (azimuth_concept:Concept)-[:isa]->(CL_concept:Concept)-[:CODE]-(CL_code:Code {SAB:"CL"})-[:PT]-(CL_term:Term) RETURN * LIMIT 1
 ```
-<img src="https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/images/AZ.png" width="750" height="500">
+<img src="images/HuBMAP-Az-schema-diagram.png" width="750" height="500">
 
 ### <ins>Illuminating the Druggable Genome (IDG)</ins>
 
-Show the `IDGP` (IDG-protein) mapping between `PUBCHEM` and `UNIPROTKB`
+Show the `IDGP` (IDG-protein) mapping between `PUBCHEM` and `UNIPROTKB`.
 ```cypher 
 MATCH (pubchem_code:Code {SAB:'PUBCHEM'})-[:CODE]-(pubchem_cui:Concept)-[:bioactivity {SAB:'IDGP'}]-(uniprot_cui:Concept)-[:CODE]-(uniprot_code:Code {SAB:"UNIPROTKB"})
 RETURN * LIMIT 1
@@ -465,10 +484,9 @@ MATCH (mp_cui)-[:sex {SAB:'MOTRPAC'}]->(pato_cui:Concept)-[:PREF_TERM]-(pato_ter
 RETURN * LIMIT 1
 ```
 
-
 ### <ins>Metabolomics Workbench (MW)</ins>
 
-Show the Metabolics Workbench mapping between an `HGNC` node an a `PUBCHEM` node on one hand through `causally_influences` relationship on one hand and correlations between that metabolite and a human condition and the associated tissue that the metabolite is `produced_by`:
+Show the Metabolics Workbench mapping between an `HGNC` node and a `PUBCHEM` node through the `causally_influences` relationship and correlations between that metabolite and a human condition and the associated tissue that the metabolite is `produced_by`:
 ```cypher
 MATCH (gene_code:Code {SAB:"HGNC"})<-[:CODE]-(gene_concept:Concept)-[r1:causally_influences {SAB:"MW"}]->(metabolite_concept:Concept)-[r2:correlated_with_condition {SAB:"MW"}]->(condition_concept:Concept)-[]->(tissue_concept:Concept)<-[r3:produced_by {SAB:"MW"}]-(metabolite_concept:Concept)
 RETURN * LIMIT 1
@@ -483,12 +501,11 @@ RETURN * LIMIT 1
 ```
 
 
-# Tips and Tricks
+## Tips and Tricks
 
-- You might notice that some queries have a `MATCH` statement for every line such as these [GTEx queries](https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/user_guide/CFDE_DataDistillery_UserGuide.md#genotype-tissue-expression-gtex) , while other queries have a single `MATCH` statement followed by several patterns seperated by a comma such as these [GlyGen queries](https://github.com/TaylorResearchLab/CFDE_DataDistillery/blob/main/user_guide/CFDE_DataDistillery_UserGuide.md#glygen-1). Both styles produce identical query plans, they just represent two different syntax styles.
+- You might notice that some queries have a `MATCH` statement for every line such as these [GTEx queries](CFDE_DataDistillery_UserGuide.md#genotype-tissue-expression-gtex), while other queries have a single `MATCH` statement followed by several patterns seperated by a comma such as these [GlyGen queries](CFDE_DataDistillery_UserGuide.md#glygen-1). Both styles produce identical query plans, they just represent two different syntax styles.
 
-
-- Most of the queries in this tutorial should not take long to run (<10 seconds). But in general, to speed up the run time of a query it can be helpful to start with the smaller dataset or even a single node if possible. For example, if you know you want to search for a specific gene and the phenotypes it is related to, you would first `MATCH` on the gene and then on the relationships to the `HPO` dataset.
+- Most of the queries in this tutorial should not take long to run (<10 seconds). But in general, to speed up the run time of a query it can be helpful to start with the smaller dataset or even a single node if possible. For example, if you know you want to search for a specific gene and the phenotypes it is related to, you would first want to `MATCH` on the gene and then on the relationships to the `HPO` dataset.
 
 Here is an example using Cypher:
 
@@ -505,10 +522,8 @@ MATCH (hpo_cui)-[:CODE]-(hpo_code:Code {SAB:'HPO'})
 MATCH (hpo_cui)-[r]-(hgnc_cui)-[:CODE]-(hgnc_code:Code {CODE:'7881'})
 RETURN DISTINCT hgnc_code.CodeID, hpo_code.CodeID
 ```
-The total run time for both queries is short because `HPO` is a small dataset, but the first query still runs over 20x faster. The speed up will be magnified if you are dealing with some of the larger datasets in the graph such as `GTEx` and `ERCC`.
+The total run time for both queries is short because `HPO` is a small dataset, but the first query still runs over 20x faster. The speed up will be magnified if you are dealing with some of the larger datasets in the graph such as `GTEX` and `ERCC`.
 
-Also, note that run times will vary from system to system but the relative speed up should be consistent. Additionally, Neo4j performs query caching, so if you are timing your own query run times just know that after you run a query for the first time Neo4j will cache the query and any identical queries submitted afterwards will be checked and (if found) returned much more quickly. This can make finding an 'average' run time of a query difficult and misleading if your simply running the same query again and again. You can read about Neo4j's query caching [here](https://neo4j.com/developer/kb/understanding-the-query-plan-cache/).
-
-
+Also, note that run times will vary from system to system but the relative speed up should be consistent. Additionally, Neo4j performs query caching, so if you are timing your own query run times just know that after you run a query for the first time Neo4j will cache the query and any identical queries submitted afterwards will be checked and (if found) returned much more quickly. This can make finding an 'average' run time of a query difficult and misleading if you're simply running the same query again and again. You can read about Neo4j's query caching [here](https://neo4j.com/developer/kb/understanding-the-query-plan-cache/).
 
 
