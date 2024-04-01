@@ -754,6 +754,9 @@ The ClinVar dataset (v2023-01-05) was utilized to define assertions between huma
 
 The edge lists of the CMAP Signatures of Differentially Expressed Genes for Small Molecules dataset were obtained from the Harmonizome database <https://maayanlab.cloud>. The dataset added 2,625,336 relationships (including reverse relationships) connecting the CHEBI and HGNC nodes with predicates "negatively_correlated_with_gene", "inverse_negatively_correlated_with_gene", "positively_correlated_with_gene", "inverse_positively_correlated_with_gene" (SAB: "CMAP").
 
+### DisGeNET
+![]()
+
 ### HPOMP
 
 This set of assertions maps human phenotype ontology (HPO) nodes to mammalian phenotype ontology (MP) nodes through the 'is_approximately_equivalent_to'. It is essentially a set of assertions mapping human phenotype codes to mouse phenotype codes. The mappings were produced by using a software tool called [PheKnowLator](https://github.com/callahantiff/PheKnowLator). There are 1,785 HPOMP mappings. These assertions can be queried by specifying the SAB property as HPOMP on the 'is_approximately_equivalent_to' relationship.
@@ -784,7 +787,7 @@ This set of assertions maps human ENSEMBL gene nodes to rat ENSEMBL gene nodes. 
 
 ### WikiPathways
 
-![](https://github.com/nih-cfde/data-distillery/blob/benstear-patch-2/images/wikipathways_schema.png)
+![](images/wikipathways_schema.png)
 
 [WikiPathways](https://www.wikipathways.org) contains assertions defining interactions between genes, chemicals and molecules within biological pathways. These assertions were 
 
