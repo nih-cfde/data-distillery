@@ -755,7 +755,7 @@ The ClinVar dataset (v2023-01-05) was utilized to define assertions between huma
 The edge lists of the CMAP Signatures of Differentially Expressed Genes for Small Molecules dataset were obtained from the Harmonizome database <https://maayanlab.cloud>. The dataset added 2,625,336 relationships (including reverse relationships) connecting the CHEBI and HGNC nodes with predicates "negatively_correlated_with_gene", "inverse_negatively_correlated_with_gene", "positively_correlated_with_gene", "inverse_positively_correlated_with_gene" (SAB: "CMAP").
 
 ### DisGeNET
-![]()
+![](images/wikipathways_schema.png)
 
 ### HPOMP
 
@@ -789,6 +789,6 @@ This set of assertions maps human ENSEMBL gene nodes to rat ENSEMBL gene nodes. 
 
 ![](images/wikipathways_schema.png)
 
-[WikiPathways](https://www.wikipathways.org) contains assertions defining interactions between genes, chemicals and molecules within biological pathways. These assertions were 
+[WikiPathways](https://www.wikipathways.org) contains assertions defining interactions between genes within biological pathways. Genes are connected through one of seven different relationship types, in order of most frequent to least frequent: DirectedInteraction, Inhibition,Stimulation, Binding, TranscriptionTranslation, Conversion and Catalysis. There are also WikiPathway Concepts which represent pathways. Each pathway Concept is connected to the genes that have interactions in that pathway.
 
 
