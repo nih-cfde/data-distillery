@@ -784,5 +784,8 @@ This set of assertions maps human ENSEMBL gene nodes to rat ENSEMBL gene nodes. 
 
 ### WikiPathways
 
+![](https://github.com/nih-cfde/data-distillery/blob/benstear-patch-2/images/wikipathways_schema.png)
+
 [WikiPathways](https://www.wikipathways.org) contains assertions defining interactions between genes, chemicals and molecules within biological pathways. These assertions were 
+
 
