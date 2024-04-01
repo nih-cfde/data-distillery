@@ -781,3 +781,8 @@ Five subsets of MSigDB v7.4 datasets were introduced as entity-gene relationship
 ### RATHCOP
 
 This set of assertions maps human ENSEMBL gene nodes to rat ENSEMBL gene nodes. These mappings were generated from the [HCOP](https://www.genenames.org/tools/hcop/) tool just like for the mouse to human assertions, except we used the ENSEMBL codes here instead of the HGNC codes. The 'has_human_ortholog' relationship is used to connect ENSEMBL Rat nodes to ENSEMBL Human nodes. There are 42,371 RATHCOP mappings and they can be queried by specifying the SAB property as RATHCOP on the 'has_human_ortholog' relationship.
+
+### WikiPathways
+
+[WikiPathways](https://www.wikipathways.org) contains assertions defining interactions between genes, chemicals and molecules within biological pathways. These assertions were 
+
