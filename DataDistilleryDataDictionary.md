@@ -755,7 +755,7 @@ The ClinVar dataset (v2023-01-05) was utilized to define assertions between huma
 The edge lists of the CMAP Signatures of Differentially Expressed Genes for Small Molecules dataset were obtained from the Harmonizome database <https://maayanlab.cloud>. The dataset added 2,625,336 relationships (including reverse relationships) connecting the CHEBI and HGNC nodes with predicates "negatively_correlated_with_gene", "inverse_negatively_correlated_with_gene", "positively_correlated_with_gene", "inverse_positively_correlated_with_gene" (SAB: "CMAP").
 
 ### DisGeNET
-![images/disgenet.png](images/disgenet.png)
+![images/disgenet.png](images/DISGENET_schema.png)
 [DisGeNET](https://www.disgenet.org) contains gene-disease associations (GDA) and gene-variant associations (VDA). The GDA data are organized by Semanticscience Integrated Ontology Codes which represent what kind of variant is infecting the gene. There are 15 different types of variants and each one has its own SAB. Each GDA gets its own node and are connected to an HGNC node and a disease/phenotype node, usually HPO or DOID, through 'refers_to' relationships. The VDA data also get their own nodes and these are connected to a dbSNP node and an HGNC node. There are approximately 1.1 million GDAs and 370k VDAs.
  
 ### HPOMP
