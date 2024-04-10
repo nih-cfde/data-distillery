@@ -757,8 +757,13 @@ The edge lists of the CMAP Signatures of Differentially Expressed Genes for Smal
 ### DisGeNET
 ![images/disgenet.png](images/DISGENET_schema.png)
 [DisGeNET](https://www.disgenet.org) contains gene-disease associations (GDA) and gene-variant associations (VDA). The GDA data are organized by Semanticscience Integrated Ontology Codes which represent what kind of variant is infecting the gene. There are 15 different types of variants and each one has its own SAB. Each GDA gets its own node and are connected to an HGNC node and a disease/phenotype node, usually HPO or DOID, through 'refers_to' relationships. The VDA data also get their own nodes and these are connected to a dbSNP node and an HGNC node. There are approximately 1.1 million GDAs and 370k VDAs.
-'''
-'''
+```cypher
+// Cypher query to reproduce the schema figure
+match (t:Term)-[:PT_DGN]-(code1:Code)-[:CODE]-(cui1:Concept)-[r0:refers_to]-(cui2:Concept)-[:CODE]-(code2:Code {SAB:'HP'})-[:PT]-(t2:Term)
+match (cui1)-[r1:refers_to]-(cui3:Concept)-[:CODE]-(code3:Code {SAB:'HGNC'})-[:PT_MONDO]-(t3:Term)
+where code1.SAB starts with 'DGNF'
+RETURN * limit 1
+```
 
 ### HPOMP
 
@@ -788,13 +793,18 @@ Five subsets of MSigDB v7.4 datasets were introduced as entity-gene relationship
 
 This set of assertions maps human ENSEMBL gene nodes to rat ENSEMBL gene nodes. These mappings were generated from the [HCOP](https://www.genenames.org/tools/hcop/) tool just like for the mouse to human assertions, except we used the ENSEMBL codes here instead of the HGNC codes. The 'has_human_ortholog' relationship is used to connect ENSEMBL Rat nodes to ENSEMBL Human nodes. There are 42,371 RATHCOP mappings and they can be queried by specifying the SAB property as RATHCOP on the 'has_human_ortholog' relationship.
 
+### Reactome
+
+
 ### WikiPathways
 
 ![](images/wikipathways_schema.png)
-''' 
+```cypher
+// Cypher query to reproduce the schema figure
 match (t0:Term)-[:PT]-(code1:Code {SAB:'HGNC'})-[:CODE]-(cui1:Concept)-[{SAB:'WP'}]-(cui3:Concept)-[:CODE]-(code3:Code {SAB:'HGNC'})-[:PT]-(t:Term)
 RETURN * limit 1
-'''
+```
+
 [WikiPathways](https://www.wikipathways.org) contains assertions defining interactions between genes within biological pathways. Genes are connected through one of seven different relationship types, in order of most frequent to least frequent: DirectedInteraction, Inhibition,Stimulation, Binding, TranscriptionTranslation, Conversion and Catalysis. There are also WikiPathway Concepts which represent pathways. Each pathway Concept is connected to the genes that have interactions in that pathway.
 
 
