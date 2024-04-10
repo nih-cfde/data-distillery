@@ -512,7 +512,10 @@ Neo4j screenshot of query results:
 
 <img src="https://github.com/unmtransinfo/cfde-distillery/blob/main/doc/UserGuide/images/2d.png?raw=true" width="100%">
 
-Example 3: Additional use case development inspired by the human ALOX genes encoding lipoxygenases and the inflammation associated with asthma
+
+  
+#### Example 3: Additional use case development inspired by the human ALOX genes encoding lipoxygenases and the inflammation associated with asthma
+
 Example 3a: Combining data from IDG-DrugCentral and LINCS, below are the results for a query seeking genes and Pubchem compounds associated with the disease “asthma”
 
 ```cypher 
