@@ -452,7 +452,19 @@ RETURN * LIMIT 1
 
 #### Additional IDG Use Cases from the [IDG User Guide](https://github.com/unmtransinfo/cfde-distillery/blob/main/doc/UserGuide/IDG_UBKG_queries_for_tutorial.md): 
 
-##### IDG use-case which combines our IDG dataset with both LINCS and GTEx
+##### IDG use-case which combines our IDG dataset with both LINCS and GTEx (Example 2 from the IDG User Guide)
+Example 2a: Find the top 25% genes that are highly expressed in the GTEx dataset using HGNC for gene annotations.
+
+```cypher 
+MATCH p=(tissue_code:Code {SAB:"GTEXEXP"})<-[:CODE]-(tissue_concept:Concept)-[r:expressed_in {SAB:"GTEXEXP"}]-(gene_concept:Concept)-[:CODE]->(gene_code:Code{SAB:'HGNC'})
+WITH gene_code.CodeID as genes, COUNT(tissue_code.CodeID) as tissue_count, toInteger(COUNT(p) * 0.25) as top25Percent
+ORDER BY tissue_count DESC
+RETURN genes, tissue_count LIMIT 10
+```
+
+Neo4j screenshot of query results:
+<img src="https://github.com/unmtransinfo/cfde-distillery/blob/main/doc/UserGuide/images/2a.png?raw=true" width="100%">
+
 
 ### <ins>Gabriella Miller Kids First (GMKF)</ins>
 
