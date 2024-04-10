@@ -450,6 +450,10 @@ MATCH (pubchem_code:Code {SAB:'PUBCHEM'})-[:CODE]-(pubchem_cui:Concept)-[:indica
 RETURN * LIMIT 1
 ```
 
+#### Additional IDG Use Cases from the [IDG User Guide](https://github.com/unmtransinfo/cfde-distillery/blob/main/doc/UserGuide/IDG_UBKG_queries_for_tutorial.md): 
+
+##### IDG use-case which combines our IDG dataset with both LINCS and GTEx
+
 ### <ins>Gabriella Miller Kids First (GMKF)</ins>
 
 Show the `belongs_to_cohort` relationship between a `KFPT` node (Kids First Patient) and a `KFCOHORT` (Kids First Cohort) node as well as the `KFGENEBIN` node:
