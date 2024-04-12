@@ -795,6 +795,14 @@ This set of assertions maps human ENSEMBL gene nodes to rat ENSEMBL gene nodes. 
 
 ### Reactome
 
+![](images/reactome.png)
+```cypher
+// Cypher query to reproduce the schema figure
+match (code1:Code {SAB:'REACTOME'})-[:CODE]-(cui1:Concept)-[{SAB:'REACTOME'}]-(cui3:Concept)-[:CODE]-(code3:Code {SAB:'GO'})
+RETURN * limit 1
+```
+
+[Reactome](https://reactome.org) is a database of reactions, organized into their respective pathways. Interactions between entities such as nucleic acids, proteins and small molecules make up these assertions. Reactome reactions have the SAB of `REACTOME` and have either a 'has_input' relationship or a 'has_GO_term' relationship with either a CHEBI, GO or UNIPROTKB Code.
 
 ### WikiPathways
 
