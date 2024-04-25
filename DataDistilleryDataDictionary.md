@@ -746,6 +746,19 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 ## Additional Datasets
 
+### BIOMARKER
+![images/disgenet.png](images/biomarker_schema.png)
+
+```cypher
+// Cypher query to reproduce the schema figure
+match (code1:Code {CodeID:'BIOMARKER:AN3902-1'})-[:CODE]-(cui1:Concept)
+match (cui1)-[r1:has_BEST_classification]-(obci_cui:Concept)-[:CODE]-(code2:Code {SAB:'OBCI'})
+match (cui1)-[r2:determined_using_sample_from]-(ub_cui:Concept)-[:CODE]-(code3:Code {SAB:'UBERON'})-[:PT]-(t2:Term)
+match (cui1)-[r3:_indicates_risk_of_developing]-(doid_cui:Concept)-[:CODE]-(code4:Code {SAB:'DOID'})-[:PT]-(t3:Term)
+match (cui1)-[r4:indicated_by_presence_of]-(dbsnp_cui:Concept)-[:CODE]-(code5:Code {SAB:'DBSNP'})
+RETURN * limit 1
+```
+
 ### CLINVAR
 
 The ClinVar dataset (v2023-01-05) was utilized to define assertions between human genes and phenotypes. Only genes with pathogenic, likely pathogenic and pathogenic/likely pathogenic variants were considered, and we excluded associations with no assertion criteria met. To retrieve the target phenotype/disease we used MedGen IDs listed in the ClinVar dataset (also already present in the KG). Processed ClinVar dataset contains 214,040 relationships (including reverse relationships) with the following characteristics [Type: "gene_associated_with_disease_or_phenotype", SAB: "CLINVAR"] and [type: inverse_gene_associated_with_disease_or_phenotype, SAB: "CLINVAR"] connecting HGNC to MONDO, HPO, EFO and MESH Concept nodes.
