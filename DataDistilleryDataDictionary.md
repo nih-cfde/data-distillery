@@ -815,4 +815,136 @@ RETURN * limit 1
 
 [WikiPathways](https://www.wikipathways.org) contains assertions defining interactions between genes within biological pathways. Genes are connected through one of seven different relationship types, in order of most frequent to least frequent: DirectedInteraction, Inhibition,Stimulation, Binding, TranscriptionTranslation, Conversion and Catalysis. There are also WikiPathway Concepts which represent pathways. Each pathway Concept is connected to the genes that have interactions in that pathway.
 
+### UNIPROTKB
 
+#### UNIPROTKB dataset
+
+|                                                  |                                                                                                                                                                                                                                             |
+|--------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Dataset SAB(s)                                   | UNIPROTKB, HGNC                                                                                                                                                                                                                             |
+| Authority                                        | J. Alan Simmons, Department of Biomedical Informatics (DBMI), University of Pittsburgh                                                                                                                                                      |
+| Source Information                               | Export of information from UniProtKB'S REST API.                                                                                                                                                                                            |
+| Purpose                                          | Describes protein products of human genes                                                                                                                                                                                                   |
+| Description                                      | Describes a select set of proteins from UniProtKB in terms of their relationship as gene products of genes from HGNC.                                                                                                                       |
+| Summarization of Methdology                      | The UBKG generation framework script executes a query against the UniProtKB REST API that returns information on the proteins that are associated with Homo sapiens. The script then maps each protein with a gene, using HGNC identifiers. |
+| Summarization of Methodology Code Repository URL | https://github.com/x-atlas-consortia/ubkg-etl/blob/main/generation_framework/uniprotkb/README.md                                                                                                                                            |
+| Total Nodes                                      | 40,339                                                                                                                                                                                                                                      |
+| Total Edges                                      | 20,212                                                                                                                                                                                                                                      |
+
+##### UNIPROTKB Schema Diagram
+
+![](images/uniprotkb_schema.jpg)
+
+##### UNIPROTKB Node Counts
+
+| **SAB**   | **Count** |
+|-----------|-----------|
+| UNIPROTKB | 20,208    |
+| HGNC      | 20,131    |
+
+##### UNIPROTKB Edge Counts
+
+| **Subject SAB** | **Predicate**    | **Object SAB** | **Count** |
+|-----------------|------------------|----------------|-----------|
+| UNIPROTKB       | gene_product_of  | HGNC           | 20,212    |
+| HGNC            | has_gene_product | UNIPROTKB      | 20,212    |
+
+### GENCODE
+
+#### GENCODE dataset
+
+|                                                  |                                                                                                                                                                                                                                                                              |
+|--------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Dataset SAB(s)                                   | ENSEMBL,UNIPROTKB,GENCODE_VS,PGO,REFSEQ                                                                                                                                                                                                                                      |
+| Authority                                        | J. Alan Simmons, Department of Biomedical Informatics (DBMI), University of Pittsburgh                                                                                                                                                                                       |
+| Source Information                               | GENCODE FTP site for Human release 41 (GRCh38.p13)                                                                                                                                                                                                                           |
+| Description                                      | Translated gene annotation data from GENCODE                                                                                                                                                                                                                                 |
+| Summarization of Methdology                      | The UBKG generation script: downloads annotation and metadata GTF files from the GenCode FTP site; encodes information using valuesets extracted from both the annotation files and the GenCode web site; and converts encoded annotation data into UBKG Edges/Nodes format. |
+| Summarization of Methodology Code Repository URL | https://github.com/x-atlas-consortia/ubkg-etl/blob/main/generation_framework/gencode/README.md                                                                                                                                                                               |
+| Total Nodes                                      |                                                                                                                                                                                                                                                                              |
+| Total Edges                                      |                                                                                                                                                                                                                                                                              |
+
+##### GENCODE Schema Diagram
+The GENCODE schema corresponds to assertions that can be derived from the annotation file. 
+The types of relationships depend on whether the annotation is for a gene or a transcript.
+
+Gene annotation:
+![](images/GENCODE_gene_schema.jpg)
+
+Transcript annotation:
+![](images/GENCODE_transcript_schema.jpg)
+
+##### GENCODE Node Counts
+The UBKG features concept-code synonymy: e.g., if a gene has both ENSEMBL and HGNC IDs, the codes for those IDs share the same concept.
+Because of synonymy, concepts are counted, not codes.
+
+GENCODE is associated with 453,126 concept nodes.
+
+##### GENCODE Edge Counts
+
+All edges in GENCODE have SAB='GENCODE'.
+
+Many of the GENCODE assertions have categorical objects with values that are taken from the GENCODE_VS ontology.
+
+| edge                   | count   | categorical? |
+|------------------------|---------|--------------|
+| isa                    | 15,790  | no           |
+| is_gene_biotype        | 241,650 | yes          |
+| is_transcript_biotype  | 175,576 | yes          |
+| is_feature_type        | 312,946 | yes          |
+| is_directional_form_of | 312,867 | yes          |
+| has_reseq_id           | 140,164 | no           |
+
+### GENCODE_VS
+
+#### GENCODE_VS dataset
+
+|                                                  |                                                                                                                                                                                                                                                                                                                                                                                                     |
+|--------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Dataset SAB(s)                                   | GENCODE_VS                                                                                                                                                                                                                                                                                                                                                                                          |
+| Authority                                        | J. Alan Simmons, Department of Biomedical Informatics (DBMI), University of Pittsburgh                                                                                                                                                                                                                                                                                                              |
+| Source Information                               | [GENCODE site](https://www.gencodegenes.org)                                                                                                                                                                                                                                                                                                                                                        |
+| Description                                      | Valuesets of categorical gene annotation information                                                                                                                                                                                                                                                                                                                                                |
+| Summarization of Methdology                      | Categorical annotation information from the GenCode [Data Format](https://www.gencodegenes.org/pages/data_format.html) and [Biotypes](https://www.gencodegenes.org/pages/biotypes.html) pages were used to build a [SimpleKnowledge](https://github.com/x-atlas-consortia/SimpleKnowledge) spreadsheet of valueset information. The UBKG generation script refers GENCODE_VS when building GENCODE. |
+| Summarization of Methodology Code Repository URL | https://github.com/x-atlas-consortia/ubkg-etl/blob/main/generation_framework/gencode/README.md                                                                                                                                                                                                                                                                                                      |
+
+##### Source spreadsheet
+The GENCODE_VS SimpleKnowledge spreadsheet can be found [here](https://docs.google.com/spreadsheets/d/1PVngNFEVW2RA5q4URMx9V89cEcLwrrcHyrAvYRfAM9U/edit?usp=sharing).
+
+### REFSEQ
+
+#### REFSEQ dataset
+
+|                                                  |                                                                                                                                                                                                                                                  |
+|--------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Dataset SAB(s)                                   | REFSEQ                                                                                                                                                                                                                                           |
+| Authority                                        | J. Alan Simmons, Department of Biomedical Informatics (DBMI), University of Pittsburgh                                                                                                                                                           |
+| Source Information                               | Export of information from NCBI EUtils                                                                                                                                                                                                           |
+| Purpose                                          | RefSeq definitions for human genes                                                                                                                                                                                                               |
+| Description                                      | Provides RefSeq definitions of genes based on Gene ID.                                                                                                                                                                                           |
+| Summarization of Methdology                      | The UBKG generation framework script executes a query against the NCBI Eutils REST API that returns information on genes based on Gene id. The script assumes that the GENCODE ingestion has occurred, which cross-references HGNC and Gene IDs. |
+| Summarization of Methodology Code Repository URL | https://github.com/x-atlas-consortia/ubkg-etl/tree/main/generation_framework/refseq                                                                                                                                                              |
+| Total Nodes                                      | 16,970                                                                                                                                                                                                                                           |
+| Total Edges                                      | 20,781                                                                                                                                                                                                                                           |
+
+##### REFSEQ schema
+![](images/refseq_schema.jpg)
+
+### AZ
+
+#### AZ dataset
+
+|                                                  |                                                                                                                                      |
+|--------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| Dataset SAB(s)                                   | AZ, CL                                                                                                                               |
+| Authority                                        | J. Alan Simmons, Department of Biomedical Informatics (DBMI), University of Pittsburgh                                               |
+| Source Information                               | [SimpleKnowledge](https://github.com/x-atlas-consortia/SimpleKnowledge) spreadheet that maps Azimuth codes with Cell Ontology codes. |
+| Purpose                                          | Cross-walk between AZ and CL                                                                                                         |
+| Summarization of Methdology                      | A custom SimpleKnowledge spreadsheet maps AZ codes to CL codes.                                                                      |
+| Summarization of Methodology Code Repository URL | https://docs.google.com/spreadsheets/d/1p1gE2F5S5Q5dIUWW5tp4SKgc3K6rJejeTU61eKrb4z0/edit?usp=sharing                                 |
+| Total Nodes                                      | 166                                                                                                                                  |
+| Total Edges                                      | 648                                                                                                                                  |
+
+##### AZ Schema Diagram
+
+![](images/az_schema.jpg)
