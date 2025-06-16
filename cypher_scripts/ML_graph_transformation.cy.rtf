@@ -1,0 +1,93 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2709
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww23740\viewh12540\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \
+// Cypher script for transforming part of the DDKG graph for ML tasks.\
+\
+//CREATE CONSTRAINT FOR (n:Semantic) REQUIRE n.TUI IS UNIQUE;\
+//CREATE CONSTRAINT FOR (n:Semantic) REQUIRE n.STN IS UNIQUE;\
+//CREATE CONSTRAINT FOR (n:Semantic) REQUIRE n.DEF IS UNIQUE;\
+//CREATE CONSTRAINT FOR (n:Semantic) REQUIRE n.name IS UNIQUE;\
+CREATE CONSTRAINT FOR (n:Concept) REQUIRE n.CUI IS UNIQUE;\
+CREATE CONSTRAINT FOR (n:Code) REQUIRE n.CodeID IS UNIQUE;\
+CREATE INDEX FOR (n:Code) ON (n.SAB);\
+CREATE INDEX FOR (n:Code) ON (n.CODE);\
+//CREATE CONSTRAINT FOR (n:Term) REQUIRE n.SUI IS UNIQUE;\
+CREATE INDEX FOR (n:Term) ON (n.name);\
+//CREATE CONSTRAINT FOR (n:Definition) REQUIRE n.ATUI IS UNIQUE;\
+//CREATE INDEX FOR (n:Definition) ON (n.SAB);\
+//CREATE INDEX FOR (n:Definition) ON (n.DEF);\
+//CREATE CONSTRAINT FOR (n:NDC) REQUIRE n.ATUI IS UNIQUE;\
+//CREATE CONSTRAINT FOR (n:NDC) REQUIRE n.NDC IS UNIQUE;\
+CREATE FULLTEXT INDEX Term_name FOR (n:Term) ON EACH [n.name];\
+\
+// Do the SAB/CodeID push by SAB to avoid javaHeap OutOfMemory Error\
+// or use apoc. to do batch tx's\
+MATCH (c:Concept)-[:CODE]-(code:Code) WHERE code.SAB IN ['HGNC','ENTREZ','ENSEMBL','NCI','OMIM','MP','HPO','HP','UBERON']\
+SET c.SAB = code.SAB\
+SET c.code_id = code.CodeID;\
+\
+MATCH (c:Concept)-[:CODE]-(code:Code) WHERE code.SAB IN ['GTEXEXP','EXPBINS']\
+SET c.SAB = code.SAB\
+SET c.code_id = code.CodeID;\
+\
+\
+\
+// ----- Genes -------------\
+MATCH (c:Concept) WHERE c.SAB IN ['HGNC','ENSEMBL','ENTREZ'] \
+REMOVE c:Concept SET c:Gene;\
+\
+\
+// Create terms_list and codes_list properties for Gene nodes\
+MATCH (g:Gene )-[code_rel:CODE]-(c:Code)-[rel]-(t:Term)\
+WHERE c.CodeID <> 'MTH:NOCODE' AND c.SAB IN ['HGNC','ENSEMBL','ENTREZ','NCI','OMIM']\
+WITH g, collect(DISTINCT c.CodeID) AS codes_list, COLLECT(DISTINCT t.name) AS terms_list\
+SET g.terms_list = terms_list\
+SET g.codes_list = codes_list;\
+\
+// Gene term\
+MATCH (t:Term)-[pt:PT]-(m:Code)<-[:CODE]-(n:Gene) \
+WHERE n.CUI = pt.CUI\
+SET n.term = t.name ;\
+\
+\
+// ------- Phenotypes -------\
+MATCH (c:Concept) WHERE c.SAB IN ['HP','HPO','MP'] \
+REMOVE c:Concept SET c:Phenotype;\
+\
+MATCH (p:Phenotype )-[code_rel:CODE]-(c:Code)-[rel]-(t:Term)\
+WHERE c.CodeID <> 'MTH:NOCODE' AND c.SAB IN ['HPO','HP','MP']\
+WITH p, collect(DISTINCT c.CodeID) AS codes_list, COLLECT(DISTINCT t.name) AS terms_list\
+SET p.terms_list = terms_list\
+SET p.codes_list = codes_list;\
+\
+MATCH (t:Term)-[pt:PT]-(m:Code)<-[:CODE]-(n:Phenotype) \
+WHERE n.CUI = pt.CUI\
+SET n.term = t.name ;\
+\
+\
+// ----------- Tissues ----------------\
+MATCH (c:Concept) WHERE c.SAB = 'UBERON' REMOVE c:Concept SET c:Tissue; // already set?\
+\
+MATCH (t:Term)-[pt:PT]-(m:Code)<-[:CODE]-(n:Tissue) \
+WHERE n.CUI = pt.CUI\
+SET n.term = t.name ;   // make sure the term and code_id match\
+\
+\
+// -------- Expression ----------\
+match (gtex_exp:Concept)-[:CODE]-(gtex_exp_code:Code \{SAB:'GTEXEXP' \})\
+match (gtex_exp)-[r5:has_expression]->(exp_concept:Concept)-[r6:CODE]-(exp_code:Code \{SAB: 'EXPBINS' \})\
+WITH toFloat(split(exp_code.CODE,'.')[0]+'.'+ split(exp_code.CODE,'.')[1]) AS lowerbound, gtex_exp ,exp_code, gtex_exp_code\
+WITH toFloat(split(exp_code.CODE,'.')[-2]+'.'+ split(exp_code.CODE,'.')[-1]) AS upperbound,lowerbound,gtex_exp, exp_code, gtex_exp_code\
+SET gtex_exp.upperbound = upperbound\
+SET gtex_exp.lowerbound = lowerbound\
+SET gtex_exp.expression = (lowerbound+upperbound)/2;\
+\
+MATCH (c:Concept)-[:CODE]-(gtex_exp_code:Code \{SAB:'GTEXEXP' \})\
+SET c:Expression \
+REMOVE c:Concept;\
+}
