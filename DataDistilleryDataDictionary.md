@@ -833,7 +833,7 @@ RETURN * limit 1
 
 ##### UNIPROTKB Schema Diagram
 
-![](images/uniprotkb_schema.jpg)
+![](images/uniprotkb_schema_v2.jpg)
 
 ##### UNIPROTKB Node Counts
 
