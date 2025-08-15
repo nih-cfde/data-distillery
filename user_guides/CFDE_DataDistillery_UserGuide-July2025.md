@@ -227,9 +227,9 @@ The query below first identifies the RBPs that are predicted to be present withi
 
 Query1:
 ```cypher
-MATCH (a:Code {CodeID: 'UBERON 0001088'})
-MATCH (b:Code) WHERE b.CodeID in ['ENSEMBL ENSG00000221461', 'ENSEMBL ENSG00000253190', 'ENSEMBL ENSG00000231764', 'ENSEMBL ENSG00000277027']
-MATCH (c:Code) WHERE c.CodeID in ['UNIPROTKB P05455', 'UNIPROTKB Q12874', 'UNIPROTKB Q9GZR7', 'UNIPROTKB Q9HAV4', 'UNIPROTKB Q2TB10']
+MATCH (a:Code {CodeID: 'UBERON:0001088'})
+MATCH (b:Code) WHERE b.CodeID in ['ENSEMBL:ENSG00000221461', 'ENSEMBL:ENSG00000253190', 'ENSEMBL:ENSG00000231764', 'ENSEMBL:ENSG00000277027']
+MATCH (c:Code) WHERE c.CodeID in ['UNIPROTKB:P05455', 'UNIPROTKB:Q12874', 'UNIPROTKB:Q9GZR7', 'UNIPROTKB:Q9HAV4', 'UNIPROTKB:Q2TB10']
 MATCH (a)<-[:CODE]-(:Concept)<-[:predicted_in]-(p:Concept)-[:CODE]->(c)
 MATCH (p)-[:molecularly_interacts_with]->(q:Concept)-[:overlaps]->(:Concept)-[:CODE]->(b)
 MATCH (q)-[:CODE]->(r:Code)
