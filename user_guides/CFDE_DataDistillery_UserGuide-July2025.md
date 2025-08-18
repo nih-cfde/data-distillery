@@ -253,7 +253,7 @@ In our next example query, we again retrieve the regulatory elements active with
 
 Query2:
 ```cypher
-MATCH (a:Code {CodeID: 'UBERON 0002367'})
+MATCH (a:Code {CodeID: 'UBERON:0002367'})
 MATCH (a)<-[:CODE]-(p:Concept)-[:part_of]->(q:Concept)-[:CODE]->(:Code {SAB: 'ENCODE.CCRE.ACTIVITY'})
 MATCH (q)<-[:part_of]-(r:Concept)<-[:located_in]-(:Concept)-[:part_of]->(:Concept)<-[:part_of]-(:Concept)-[:CODE]->(a)
 MATCH (r)-[:CODE]->(s:Code {SAB: 'ENCODE.CCRE'})
@@ -264,8 +264,8 @@ Our third example query demonstrates how to retrieve information to identify the
 
 Query3:
 ```cypher
-MATCH (a:Code {CodeID: 'UBERON 0002367'})
-MATCH (b:Code {CodeID: 'ENCODE.CCRE EH38E3881508'})
+MATCH (a:Code {CodeID: 'UBERON:0002367'})
+MATCH (b:Code {CodeID: 'ENCODE.CCRE:EH38E3881508'})
 MATCH (a)<-[:CODE]-(:Concept)-[:part_of]->(p:Concept)<-[:part_of]-(:Concept)-[:CODE]->(b)
 MATCH (p)-[:isa]->(:Concept)-[:CODE]->(q:Code {SAB: 'ENCODE.CCRE.H3K27AC'})
 MATCH (p)-[:isa]->(:Concept)-[:CODE]->(r:Code {SAB: 'ENCODE.CCRE.H3K4ME3'})
@@ -277,11 +277,10 @@ In our final example query we show how to retrieve the genes whose body lies wit
 
 Query4:
 ```cypher
-MATCH (a:Code {CodeID: 'ENCODE.CCRE EH38E3881508'})
-MATCH (a)<-[:CODE]-(:Concept)-[:part_of]->(:Concept)-[:regulates]->(:Concept)-[:CODE]->(p:Code {SAB: 'ENSEMBL'})
+MATCH (a:Code {CodeID: 'ENCODE.CCRE:EH38E3881508'})
+MATCH (a)<-[:CODE]-(:Concept)-[:part_of]->(:Concept)-[:regulates]->(:Concept)-[:CODE]->(p:Code {SAB:'ENSEMBL'})
 RETURN DISTINCT a.CodeID AS cCRE,p.CodeID AS Gene
 ```
-
 
 
 # Queries to reproduce the figures in the [Data Dictionary](DataDistilleryDataDictionary.md)
@@ -590,20 +589,20 @@ RETURN * LIMIT 1
 
 - You might notice that some queries have a `MATCH` statement for every line such as these [GTEx queries](CFDE_DataDistillery_UserGuide.md#genotype-tissue-expression-gtex), while other queries have a single `MATCH` statement followed by several patterns seperated by a comma such as these [GlyGen queries](CFDE_DataDistillery_UserGuide.md#glygen-1). Both styles produce identical query plans, they just represent two different syntax styles.
 
-- Most of the queries in this tutorial should not take long to run (<10 seconds). But in general, to speed up the run time of a query it can be helpful to start with the smaller dataset or even a single node if possible. For example, if you know you want to search for a specific gene and the phenotypes it is related to, you would first want to `MATCH` on the gene and then on the relationships to the `HPO` dataset.
+- Most of the queries in this tutorial should not take long to run (<10 seconds). But in general, to speed up the run time of a query it can be helpful to start with the smaller dataset or even a single node if possible. For example, if you know you want to search for a specific gene and the phenotypes it is related to, you would first want to `MATCH` on the gene and then on the relationships to the `HP` dataset.
 
 Here is an example using Cypher:
 
 This query, where we `MATCH` on the `HGNC` gene of interest first, returns results in ~30ms.
 ```cypher
 MATCH (hgnc_code:Code {CODE:'7881'})
-MATCH (hgnc_code)-[:CODE]-(hgnc_cui)-[r]-(hpo_cui:Concept)-[:CODE]-(hpo_code:Code {SAB:'HPO'})
+MATCH (hgnc_code)-[:CODE]-(hgnc_cui)-[r]-(hpo_cui:Concept)-[:CODE]-(hpo_code:Code {SAB:'HP'})
 RETURN DISTINCT hgnc_code.CodeID, hpo_code.CodeID
 ```
 
-meanwhile, this query, where we `MATCH` on the `HPO` dataset first, returns results in ~700ms.
+meanwhile, this query, where we `MATCH` on the `HP` dataset first, returns results in ~700ms.
 ```cypher
-MATCH (hpo_cui)-[:CODE]-(hpo_code:Code {SAB:'HPO'})
+MATCH (hpo_cui)-[:CODE]-(hpo_code:Code {SAB:'HP'})
 MATCH (hpo_cui)-[r]-(hgnc_cui)-[:CODE]-(hgnc_code:Code {CODE:'7881'})
 RETURN DISTINCT hgnc_code.CodeID, hpo_code.CodeID
 ```
