@@ -236,44 +236,6 @@ MATCH (q)-[:CODE]->(r:Code)
 RETURN DISTINCT c.CodeID AS RBP,r.CodeID AS RBS,b.CodeID AS Gene,a.CodeID AS Biosample;
 ```
 
-The query below differs from the first query in that it considers a different set of RBP loci. In this case, we query genetic loci that are the result of removing overlaps from eCLIP peaks across RBPs.
-
-Query2:
-```cypher
-MATCH (a:Code {CodeID: 'UBERON 0001088'})
-MATCH (b:Code) WHERE b.CodeID in ['ENSEMBL ENSG00000221461', 'ENSEMBL ENSG00000253190', 'ENSEMBL ENSG00000231764', 'ENSEMBL ENSG00000277027']
-MATCH (c:Code) WHERE c.CodeID in ['UNIPROTKB P05455', 'UNIPROTKB Q12874', 'UNIPROTKB Q9GZR7', 'UNIPROTKB Q9HAV4', 'UNIPROTKB Q2TB10']
-MATCH (a)<-[:CODE]-(:Concept)<-[:predicted_in]-(p:Concept)-[:CODE]->(c)
-MATCH (p)-[:molecularly_interacts_with]->(:Concept)<-[:is_subsequence_of]-(q:Concept)-[:CODE]->(r:Code)
-MATCH (q)-[:overlaps]-(:Concept)-[:CODE]->(b)
-RETURN DISTINCT c.CodeID AS RBP,r.CodeID AS RBS,b.CodeID AS Gene,a.CodeID AS Biosample;
-```
-
-In the following query, we constrain the queried non-overlapping RBP loci to those that are covered by at least 2 reads in 10 percent of samples taken from the target biofluid of healthy controls available on the exRNA Atlas. 
-
-Query3:
-```cypher
-MATCH (a:Code {CodeID: 'UBERON 0001088'})
-MATCH (b:Code) WHERE b.CodeID in ['ENSEMBL ENSG00000221461', 'ENSEMBL ENSG00000253190', 'ENSEMBL ENSG00000231764', 'ENSEMBL ENSG00000277027']
-MATCH (c:Code) WHERE c.CodeID in ['UNIPROTKB P05455', 'UNIPROTKB Q12874', 'UNIPROTKB Q9GZR7', 'UNIPROTKB Q9HAV4', 'UNIPROTKB Q2TB10']
-MATCH (a)<-[:CODE]-(p:Concept)<-[:predicted_in]-(q:Concept)-[:CODE]->(c)
-MATCH (q)-[:molecularly_interacts_with]->(:Concept)<-[:is_subsequence_of]-(r:Concept)-[:CODE]->(s:Code)
-MATCH (p)<-[]-(r)-[:overlaps]->(:Concept)-[:CODE]->(b)
-RETURN DISTINCT c.CodeID AS RBP,s.CodeID AS RBS,b.CodeID AS Gene,a.CodeID AS Biosample;
-```
-
-In our final example query, we add another constraint to the RBP loci. In this case we consider only non-overlapping RBP loci that meet the coverage cutoff stated above, and whose coverage across biofluid-specific control samples in the exRNA Atlas is significantly correlated with the coverage of other loci from the same RBP.
-
-Query4:
-```cypher
-MATCH (a:Code {CodeID: 'UBERON 0001088'})
-MATCH (b:Code) WHERE b.CodeID in ['ENSEMBL ENSG00000221461', 'ENSEMBL ENSG00000253190', 'ENSEMBL ENSG00000231764', 'ENSEMBL ENSG00000277027']
-MATCH (c:Code) WHERE c.CodeID in ['UNIPROTKB P05455', 'UNIPROTKB Q12874', 'UNIPROTKB Q9GZR7', 'UNIPROTKB Q9HAV4', 'UNIPROTKB Q2TB10']
-MATCH (a)<-[:CODE]-(p:Concept)<-[:predicted_in]-(q:Concept)-[:CODE]->(c)
-MATCH (q)-[:molecularly_interacts_with]->(:Concept)<-[:is_subsequence_of]-(r:Concept)-[:CODE]->(s:Code)
-MATCH (p)<-[:correlated_in]-(r)-[:overlaps]->(:Concept)-[:CODE]->(b)
-RETURN DISTINCT c.CodeID AS RBP,s.CodeID AS RBS,b.CodeID AS Gene,a.CodeID AS Biosample;
-```
 
 ##### Regulatory Element
 
@@ -281,7 +243,7 @@ Knowledge encoded in the assertions relating to regulatory elements allow users 
 
 Query1:
 ```cypher
-MATCH (a:Code {CodeID: 'UBERON 0002367'})
+MATCH (a:Code {CodeID: 'UBERON:0002367'})
 MATCH (a)<-[:CODE]-(p:Concept)-[:part_of]->(q:Concept)-[:CODE]->(:Code {SAB: 'ENCODE.CCRE.ACTIVITY'})
 MATCH (q)<-[:part_of]-(r:Concept)-[:CODE]->(s:Code {SAB: 'ENCODE.CCRE'})
 RETURN DISTINCT a.CodeID AS Tissue,s.CodeID AS cCRE
