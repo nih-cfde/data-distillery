@@ -345,7 +345,7 @@ This query uses the `PROTEOFORM` SAB in GlyGen data. The query extracts the `GLY
 
 ```cypher
 MATCH (glycan_code:Code {SAB:'GLYTOUCAN'})<-[:CODE]-(glycan_concept:Concept)<-[r1:has_saccharide {SAB:'PROTEOFORM'}]-(site_concept:Concept)-[:CODE]->(site_code:Code {SAB:'GLYCOSYLATION.SITE'}),//Saccaride and glycosylation site
-(site_concept:Concept)-[r2:location {SAB:'PROTEOFORM'}]->(location_concept:Concept)-[:CODE]->(location_code:Code {SAB:'GLYGEN.LOCATION'})-[:PROTEOFORM_PT]->(location_term:Term),//Location
+(site_concept:Concept)-[r2:location {SAB:'PROTEOFORM'}]->(location_concept:Concept)-[:CODE]->(location_code:Code {SAB:'GLYGEN.LOCATION'})-[]->(location_term:Term),//Location
 (location_concept:Concept)-[r3:has_amino_acid {SAB:'PROTEOFORM'}]->(amino_acid_concept:Concept)-[:CODE]->(amino_acid_code:Code {SAB:'AMINO.ACID'}),//Amino acid
 (site_concept:Concept)<-[r4:glycosylated_at {SAB:'PROTEOFORM'}]-(glycoprotein_concept:Concept)-[:CODE]->(glycoprotein_code:Code {SAB:'GLYCOPROTEIN'}),//Glycoprotein
 (glycoprotein_concept:Concept)-[r5:sequence {SAB:'PROTEOFORM'}]->(isoform_concept:Concept)-[:CODE]->(isoform_code:Code {SAB:'UNIPROTKB.ISOFORM'}),//Isoform
@@ -360,7 +360,7 @@ This query uses the `GLYCANS` SAB from the GlyGen data. The query extracts the `
 MATCH (glycan_code:Code {SAB:'GLYTOUCAN'})<-[:CODE]-(glycan_concept:Concept)-[r1:synthesized_by {SAB:'GLYCANS'}]->(glycosylation_concept:Concept)-[:CODE]->(glycosylation_code:Code {SAB:'GLYCOSYLTRANSFERASE.REACTION'}),//Glycans and glycosyltransferase reactions
 (glycan_concept:Concept)-[r2:has_canonical_residue {SAB:'GLYCANS'}]->(residue_concept:Concept)-[:CODE]->(residue_code:Code {SAB:'GLYGEN.RESIDUE'}),//Residues
 (glycan_concept:Concept)-[r3:has_motif {SAB:'GLYCANS'}]->(motif_concept:Concept)-[:CODE]->(motif_code:Code {SAB:'GLYCAN.MOTIF'}),//Motifs
-(glycan_concept:Concept)-[r4:has_glycosequence {SAB:'GLYCANS'}]->(glycosequence_concept:Concept)-[:CODE]->(glycosequence_code:Code {SAB:'GLYGEN.GLYCOSEQUENCE'})-[:GLYCANS_PT]->(glycosequence_term:Term),//Glycosequence
+(glycan_concept:Concept)-[r4:has_glycosequence {SAB:'GLYCANS'}]->(glycosequence_concept:Concept)-[:CODE]->(glycosequence_code:Code {SAB:'GLYGEN.GLYCOSEQUENCE'})-[]->(glycosequence_term:Term),//Glycosequence
 (residue_concept:Concept)-[r5:attached_by {SAB:'GLYCANS'}]->(reaction_concept:Concept)-[:CODE]->(reaction_code:Code {SAB:'GLYGEN.GLYCOSYLATION'}),//Glycosylation
 (reaction_concept:Concept)-[r6:has_enzyme_protein {SAB:'GLYCANS'}]->(glycoenzyme_concept:Concept)-[:CODE]->(glycoenzyme_code:Code {SAB:'UNIPROTKB'}),//Glycoenzyme
 (glycan_concept:Concept)-[r7:is_from_source {SAB:'GLYCANS'}]->(source_concept:Concept)-[:CODE]->(source_code:Code {SAB:'GLYGEN.SRC'})//Glygen source
@@ -393,7 +393,7 @@ RETURN * LIMIT 1
 The query extracts genes associated with the HubMAP Azimuth dataset (node SAB: `AZ`, edge SAB: `HMAZ`) clusters in human heart, liver and kidney tissues.
 
 ```cypher
-MATCH (azimuth_term:Term)-[:PT]-(azimuth_code:Code {SAB:"AZ"})-[:CODE]-(azimuth_concept:Concept)-[r1 {SAB:"HMAZ"}]->(gene_concept:Concept)-[:CODE]-(gene_code:Code {SAB:"HGNC"}), (azimuth_concept:Concept)-[:isa]->(CL_concept:Concept)-[:CODE]-(CL_code:Code {SAB:"CL"})-[:PT]-(CL_term:Term) RETURN * LIMIT 1
+MATCH (azimuth_term:Term)-[]-(azimuth_code:Code {SAB:"AZ"})-[:CODE]-(azimuth_concept:Concept)-[r1 {SAB:"HMAZ"}]->(gene_concept:Concept)-[:CODE]-(gene_code:Code {SAB:"HGNC"}), (azimuth_concept:Concept)-[:isa]->(CL_concept:Concept)-[:CODE]-(CL_code:Code {SAB:"CL"})-[]-(CL_term:Term) RETURN * LIMIT 1
 ```
 <img src="images/HuBMAP-Az-schema-diagram.png" width="750" height="500">
 
@@ -430,10 +430,10 @@ Example 2b: Continuing from example 2a (where we found all genes in UBKG that ar
 
 ```cypher 
 MATCH (tissue_concept:Concept)-[:CODE]->(tissue_code:Code {SAB:"GTEXEXP"})
-MATCH (gene_concept:Concept)-[:CODE]->(gene_code:Code {SAB:HGNC'})
+MATCH (gene_concept:Concept)-[:CODE]->(gene_code:Code {SAB:'HGNC'})
 MATCH (pubchem_concept:Concept)-[:CODE]->(pubchem_code:Code {SAB:'PUBCHEM'})
 MATCH (protein_concept:Concept)-[:CODE]->(protein_code:Code {SAB:"UNIPROTKB"})
-MATCH (tissue_concept)-[r1:expressed_in {SAB:"GTEXEXP"}]-(gene_concept)-[r2 {SAB:LINCS'}]-(pubchem_concept)-[r3:bioactivity {SAB:'IDGP'}]-(protein_concept)
+MATCH (tissue_concept)-[r1:expressed_in {SAB:"GTEXEXP"}]-(gene_concept)-[r2 {SAB:'LINCS'}]-(pubchem_concept)-[r3:bioactivity {SAB:'IDGP'}]-(protein_concept)
 RETURN * LIMIT 5
 ```
 
@@ -445,7 +445,7 @@ Example 2c: Considering data from IDG-DrugCentral and LINCS, we next find all ge
 
 ```cypher 
 MATCH (gene_concept:Concept)-[:CODE]->(gene_code:Code{SAB:'HGNC'})
-MATCH (snomed_concept:Concept)-[:CODE]-(snomed_code:Code {SAB:'SNOMEDCT_US'})-[:PT]-(snomed_term:Term)
+MATCH (snomed_concept:Concept)-[:CODE]-(snomed_code:Code {SAB:'SNOMEDCT_US'})-[]-(snomed_term:Term)
 MATCH (pubchem_concept:Concept)-[:CODE]-(pubchem_code:Code {SAB:'PUBCHEM'})
 MATCH (gene_concept)-[r1 {SAB:'LINCS'}]-(pubchem_concept)-[r2:indication {SAB:'IDGD'}]-(snomed_concept)
 WHERE snomed_term.name="Parkinson's disease"
@@ -460,7 +460,7 @@ Example 2d: Find genes and compounds associated with the birth defect “Congeni
 
 ```cypher 
 WITH ['Congenital diaphragmatic hernia'] as birthDefects
-MATCH (hpo_concept:Concept)-[:CODE]-(hpo_code:Code {SAB:'HPO'})-[:PT]-(hpo_term:Term)
+MATCH (hpo_concept:Concept)-[:CODE]-(hpo_code:Code {SAB:'HP'})-[]-(hpo_term:Term)
 MATCH (gene_concept:Concept)-[:CODE]->(gene_code:Code{SAB:'HGNC'})
 MATCH (pubchem_concept:Concept)-[:CODE]->(pubchem_code:Code {SAB:'PUBCHEM'})
 MATCH gr=(hpo_concept)-[r1:associated_with]-(gene_concept)-[r2 {SAB:'LINCS'}]-(pubchem_concept)
@@ -481,7 +481,7 @@ Example 3a: Combining data from IDG-DrugCentral and LINCS, below are the results
 
 ```cypher 
 WITH ['Asthma'] as theDisease
-MATCH (hpo_concept:Concept)-[:CODE]-(hpo_code:Code {SAB:'HPO'})-[:PT]-(hpo_term:Term)
+MATCH (hpo_concept:Concept)-[:CODE]-(hpo_code:Code {SAB:'HP'})-[]->(hpo_term:Term)
 MATCH (gene_concept:Concept)-[:CODE]->(gene_code:Code{SAB:'HGNC'})
 MATCH (pubchem_concept:Concept)-[:CODE]->(pubchem_code:Code {SAB:'PUBCHEM'})
 MATCH gr=(hpo_concept)-[r1:associated_with]-(gene_concept)-[r2 {SAB:'LINCS'}]-(pubchem_concept)
@@ -520,7 +520,7 @@ Example 3c: In order to investigate the unique tissue types associated with the 
 ```cypher 
 MATCH (uniprot_cui)-[:gene_product_of]->(hgnc_cui:Concept)-[:CODE]->(hgnc_code:Code {SAB:'HGNC'})-[]->(hgnc_term:Term {name:'ALOX5'})
 MATCH (hgnc_cui)-[:expresses]->(gtexexp_cui:Concept)-[:CODE]->(gtexexp_code:Code {SAB:'GTEXEXP'})
-MATCH (expbins_code:Code {SAB:'EXPBINS'})<-[:CODE]-(expbins_cui:Concept)-[:has_expression]-(gtexexp_cui)-[:expressed_in]->(ub_cui:Concept)-[:CODE]->(ub_code:Code {SAB:'UBERON'})-[:PT]-(ub_term:Term)
+MATCH (expbins_code:Code {SAB:'EXPBINS'})<-[:CODE]-(expbins_cui:Concept)-[:has_expression]-(gtexexp_cui)-[:expressed_in]->(ub_cui:Concept)-[:CODE]->(ub_code:Code {SAB:'UBERON'})-[]->(ub_term:Term)
 MATCH (ub_cui)-[:PREF_TERM]->(ub_term:Term)
 MATCH (pubchem_cui2)-[:PREF_TERM]-(pubchem_2_term:Term)
 RETURN distinct ub_term.name
@@ -539,7 +539,7 @@ The above query returns several locations of human cells expressing ALOX5 includ
 Show the `belongs_to_cohort` relationship between a `KFPT` node (Kids First Patient) and a `KFCOHORT` (Kids First Cohort) node as well as the `KFGENEBIN` node:
 ```cypher
 MATCH (kf_pt_code:Code {SAB:'KFPT'})-[r0:CODE]-(kf_pt_cui)-[r1:belongs_to_cohort]-(kf_cohort_cui:Concept)-[r2:CODE]-(kf_cohort_code:Code {SAB:'KFCOHORT'})
-MATCH (kf_pt_cui)-[r3:has_phenotype]-(hpo_cui)-[r4:CODE]-(hpo_code:Code {SAB:'HPO'})
+MATCH (kf_pt_cui)-[r3:has_phenotype]-(hpo_cui)-[r4:CODE]-(hpo_code:Code {SAB:'HP'})
 MATCH (kf_cohort_cui)-[r5:belongs_to_cohort]-(kfgenebin_cui)-[r6:CODE]-(kfgenebin_code:Code {SAB:'KFGENEBIN'})
 MATCH (kfgenebin_cui)-[r7:gene_has_variants]-(hgnc_cui:Concept)-[r8:CODE]-(hgnc_code:Code {SAB:'HGNC'})
 RETURN * LIMIT 1
@@ -580,7 +580,7 @@ RETURN * LIMIT 1
 
 Show an `ILX` node and its relationship to an `UBERON` node.
 ```cypher
-MATCH (ub_term:Term)-[a:PT]-(uberon_code:Code)-[b:CODE]-(ub_cui:Concept)-[c:isa {SAB:'NPO'}]-(ilx_cui:Concept)-[d:CODE]-(ilx_code:Code {SAB:'ILX'})-[e:PT_NPOSKCAN]-(ilx_term:Term) 
+MATCH (ub_term:Term)-[]-(uberon_code:Code)-[b:CODE]-(ub_cui:Concept)-[c:isa {SAB:'NPO'}]-(ilx_cui:Concept)-[d:CODE]-(ilx_code:Code {SAB:'ILX'})-[e:PT_NPOSKCAN]-(ilx_term:Term) 
 RETURN * LIMIT 1
 ```
 
