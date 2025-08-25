@@ -393,7 +393,7 @@ RETURN * LIMIT 1
 The query extracts genes associated with the HubMAP Azimuth dataset (node SAB: `AZ`, edge SAB: `HMAZ`) clusters in human heart, liver and kidney tissues.
 
 ```cypher
-MATCH (azimuth_term:Term)-[]-(azimuth_code:Code {SAB:"AZ"})-[:CODE]-(azimuth_concept:Concept)-[r1 {SAB:"HMAZ"}]->(gene_concept:Concept)-[:CODE]-(gene_code:Code {SAB:"HGNC"}), (azimuth_concept:Concept)-[:isa]->(CL_concept:Concept)-[:CODE]-(CL_code:Code {SAB:"CL"})-[]-(CL_term:Term) RETURN * LIMIT 1
+MATCH (azimuth_term:Term)<-[]-(azimuth_code:Code {SAB:"AZ"})-[:CODE]-(azimuth_concept:Concept)-[r1 {SAB:"HMAZ"}]->(gene_concept:Concept)-[:CODE]-(gene_code:Code {SAB:"HGNC"}) RETURN * LIMIT 1
 ```
 <img src="images/HuBMAP-Az-schema-diagram.png" width="750" height="500">
 
@@ -521,8 +521,6 @@ Example 3c: In order to investigate the unique tissue types associated with the 
 MATCH (uniprot_cui)-[:gene_product_of]->(hgnc_cui:Concept)-[:CODE]->(hgnc_code:Code {SAB:'HGNC'})-[]->(hgnc_term:Term {name:'ALOX5'})
 MATCH (hgnc_cui)-[:expresses]->(gtexexp_cui:Concept)-[:CODE]->(gtexexp_code:Code {SAB:'GTEXEXP'})
 MATCH (expbins_code:Code {SAB:'EXPBINS'})<-[:CODE]-(expbins_cui:Concept)-[:has_expression]-(gtexexp_cui)-[:expressed_in]->(ub_cui:Concept)-[:CODE]->(ub_code:Code {SAB:'UBERON'})-[]->(ub_term:Term)
-MATCH (ub_cui)-[:PREF_TERM]->(ub_term:Term)
-MATCH (pubchem_cui2)-[:PREF_TERM]-(pubchem_2_term:Term)
 RETURN distinct ub_term.name
 ```
 
@@ -551,7 +549,7 @@ Show the `LINCS` relationship which maps `HGNC` nodes to `PUBCHEM` nodes (there 
 ```cypher
 MATCH (hgnc_cui:Concept)-[:CODE]->(hgnc_code:Code {SAB:'HGNC'})-[]->(hgnc_term:Term)
 MATCH (hgnc_cui)-[:positively_regulated_by {SAB:'LINCS'}]-(pubchem_cui_1:Concept)-[:CODE]-(pubchem_code_1:Code {SAB:'PUBCHEM'})
-MATCH (pubchem_cui_1:Concept)-[:in_similarity_relationship_with {SAB:'LINS'}]-(pubchem_cui_2:Concept)-[:CODE]-(pubchem_code_2:Code {SAB:'PUBCHEM'})
+MATCH (pubchem_cui_1:Concept)-[:in_similarity_relationship_with {SAB:'LINCS'}]-(pubchem_cui_2:Concept)-[:CODE]-(pubchem_code_2:Code {SAB:'PUBCHEM'})
 RETURN * LIMIT 1 
 ```
 
@@ -563,7 +561,6 @@ MATCH (mp_cui:Concept)-[:CODE]->(mp_code:Code {SAB:'MOTRPAC'})
 WHERE mp_code.CODE CONTAINS 'liver'
 MATCH (mp_cui)-[:associated_with {SAB:'MOTRPAC'}]-(ensRat_cui:Concept)-[:CODE]->(ensRat_code:Code {SAB:'ENSEMBL'})
 MATCH (ensRat_cui)-[:has_human_ortholog]-(ensHum_cui:Concept)-[:CODE]-(ensHum_code:Code {SAB:'ENSEMBL'})-[]-(ensHum_term:Term)
-MATCH (ensHum_cui)-[:RO ]-(hgnc_cui:Concept)-[:CODE]-(hgnc_code:Code {SAB:'HGNC'})-[:ACR]-(hgnc_term:Term)
 MATCH (mp_cui)-[:sex {SAB:'MOTRPAC'}]->(pato_cui:Concept)-[:PREF_TERM]-(pato_term:Term)
 RETURN * LIMIT 1
 ```
