@@ -4,10 +4,10 @@ A repository for the Data Distillery partnership.
 ![](images/distillery-dataset-diagram.png)
 
 Quick links:
-- Data Distillery Jan 2025 release links:
+- Data Distillery **Jan 2025** release links:
   - [User Guide](DataDistillery03Jan2025/DD_03Jan2025_userguide.md)
   - [Data Dictionary](DataDistillery03Jan2025/DD_03Jan2025_data_dictionary.md)
-- Data Distillery July 2025 release links:
+- Data Distillery **July 2025** release links:  
   - [User Guide](DataDistilleryJuly2025/DD_July2025_userguide.md)
   - [Data Dictionary](DataDistilleryJuly2025/DD_July2025_data_dictionary.md)
   
