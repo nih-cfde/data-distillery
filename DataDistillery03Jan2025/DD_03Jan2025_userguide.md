@@ -1,13 +1,11 @@
-# User Guide for the CFDE Data Distillery Knowledge Graph
-
-## Guide for exploring the Data Distillery knowledge graph using Cypher
-
+# User Guide for the January 2025 Data Distillery Knowledge Graph
 Authors: Ben Stear, Taha Mohseni Ahooyi, Deanne Taylor, Jonathan Silverstein, Alan Simmons
+## Guide for exploring the Data Distillery knowledge graph using Cypher
 
 ---------
 * This guide is meant to be an introduction for how to write Cypher queries to explore the Data Distillery Knowledge Graph (DDKG). A basic understanding of Cypher is assumed. If you are unfamiliar with Cypher please refer to the [Neo4j docs](https://neo4j.com/developer/cypher/). 
-* For documentation concerning how the DDKG is generated or for information about the general schema of the graph please see our [Github docs page](https://ubkg.docs.xconsortia.org). For documentation concerning the specific schema for a DCCs dataset please see our [Data Dictionary](DataDistilleryDataDictionary.md).
-* It is assumed you are working with the latest version of the DDKG which can be found on [globus](https://app.globus.org/file-manager?origin_id=24c2ee95-146d-4513-a1b3-ac0bfdb7856f&origin_path=%2Fprojects%2Fdata-distillery%2FValidated%2FDistribution%2F). Some queries will fail to return anything if you are working with an older version of the graph.
+* For documentation concerning how the DDKG is generated or for information about the general schema of the graph please see our [Github docs page](https://ubkg.docs.xconsortia.org). 
+
 --------
 This guide has 4 sections:
 
@@ -651,5 +649,4 @@ RETURN DISTINCT hgnc_code.CodeID, hpo_code.CodeID
 The total run time for both queries is short because `HPO` is a small dataset, but the first query still runs over 20x faster. The speed up will be magnified if you are dealing with some of the larger datasets in the graph such as `GTEX` and `ERCC`.
 
 Also, note that run times will vary from system to system but the relative speed up should be consistent. Additionally, Neo4j performs query caching, so if you are timing your own query run times just know that after you run a query for the first time Neo4j will cache the query and any identical queries submitted afterwards will be checked and (if found) returned much more quickly. This can make finding an 'average' run time of a query difficult and misleading if you're simply running the same query again and again. You can read about Neo4j's query caching [here](https://neo4j.com/developer/kb/understanding-the-query-plan-cache/).
-
 
