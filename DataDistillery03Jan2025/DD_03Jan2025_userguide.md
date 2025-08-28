@@ -2,8 +2,6 @@
 Authors: Ben Stear, Taha Mohseni Ahooyi, Deanne Taylor, Jonathan Silverstein, Alan Simmons
 ## Guide for exploring the Data Distillery knowledge graph using Cypher
 
-Authors: Ben Stear, Taha Mohseni Ahooyi, Deanne Taylor, Jonathan Silverstein, Alan Simmons
-
 ---------
 * This guide is meant to be an introduction for how to write Cypher queries to explore the Data Distillery Knowledge Graph (DDKG). A basic understanding of Cypher is assumed. If you are unfamiliar with Cypher please refer to the [Neo4j docs](https://neo4j.com/developer/cypher/). 
 * For documentation concerning how the DDKG is generated or for information about the general schema of the graph please see our [Github docs page](https://ubkg.docs.xconsortia.org). 
