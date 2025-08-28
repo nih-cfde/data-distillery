@@ -1,5 +1,5 @@
 # User Guide for the July 2025 release of the Data Distillery Knowledge Graph
-
+Authors: Ben Stear, Taha Mohseni Ahooyi, Deanne Taylor, Jonathan Silverstein, Alan Simmons
 ## Guide for exploring the Data Distillery knowledge graph using Cypher
 ---------
 * This guide is meant to be an introduction for how to write Cypher queries to explore the Data Distillery Knowledge Graph (DDKG). A basic understanding of Cypher is assumed. If you are unfamiliar with Cypher please refer to the [Neo4j docs](https://neo4j.com/developer/cypher/). 
