@@ -9,11 +9,11 @@ Authors: Ben Stear, Taha Mohseni Ahooyi, Deanne Taylor, Jonathan Silverstein, Al
 This guide has 4 sections:
 1. [Introduction](/DataDistilleryAugust2025/DD_August2025_userguide.md#introduction)
 
-2. [Use Cases](CFDE_DataDistillery_UserGuide.md#dcc-use-cases)
+2. [Use Cases](/DataDistilleryAugust2025/DD_August2025_userguide.md#dcc-use-cases)
 
-3. [Queries to reproduce Data Dictionary figures](CFDE_DataDistillery_UserGuide.md#queries-to-reproduce-the-figures-in-the-data-dictionary)
+3. [Queries to reproduce Data Dictionary figures](/DataDistilleryAugust2025/DD_August2025_userguide.md#queries-to-reproduce-the-figures-in-the-data-dictionary)
 
-4. [Tips and Tricks](CFDE_DataDistillery_UserGuide.md#tips-and-tricks)
+4. [Tips and Tricks](/DataDistilleryAugust2025/DD_August2025_userguide.md#tips-and-tricks)
 
 --------
 ## Introduction
