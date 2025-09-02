@@ -1,21 +1,19 @@
-# User Guide for the January 2025 Data Distillery Knowledge Graph
+# User Guide for the August 2025 release of the Data Distillery Knowledge Graph
 Authors: Ben Stear, Taha Mohseni Ahooyi, Deanne Taylor, Jonathan Silverstein, Alan Simmons
 ## Guide for exploring the Data Distillery knowledge graph using Cypher
-
 ---------
 * This guide is meant to be an introduction for how to write Cypher queries to explore the Data Distillery Knowledge Graph (DDKG). A basic understanding of Cypher is assumed. If you are unfamiliar with Cypher please refer to the [Neo4j docs](https://neo4j.com/developer/cypher/). 
-* For documentation concerning how the DDKG is generated or for information about the general schema of the graph please see our [Github docs page](https://ubkg.docs.xconsortia.org). 
+* For documentation concerning how the DDKG is generated or for information about the general schema of the graph please see our [Github docs page](https://ubkg.docs.xconsortia.org).
 
 --------
 This guide has 4 sections:
+1. [Introduction](/DataDistilleryAugust2025/DD_August2025_userguide.md#introduction)
 
-1. [Introduction](/DataDistillery03Jan2025/DD_03Jan2025_userguide.md#introduction)
+2. [Use Cases](/DataDistilleryAugust2025/DD_August2025_userguide.md#dcc-use-cases)
 
-2. [Use Cases](/DataDistillery03Jan2025/DD_03Jan2025_userguide.md#dcc-use-cases)
+3. [Queries to reproduce Data Dictionary figures](/DataDistilleryAugust2025/DD_August2025_userguide.md#queries-to-reproduce-the-figures-in-the-data-dictionary)
 
-3. [Queries to reproduce Data Dictionary figures](/DataDistillery03Jan2025/DD_03Jan2025_userguide.md#queries-to-reproduce-the-figures-in-the-data-dictionary)
-
-4. [Tips and Tricks](/DataDistillery03Jan2025/DD_03Jan2025_userguide.md#tips-and-tricks)
+4. [Tips and Tricks](/DataDistilleryAugust2025/DD_August2025_userguide.md#tips-and-tricks)
 
 --------
 ## Introduction
@@ -29,6 +27,7 @@ MATCH (hgnc_code:Code {SAB:'HGNC'})
 RETURN * 
 LIMIT 1
 ```
+
 
 You can also specify properties outside the Node syntax using the `WITH` keyword,
 ```cypher
@@ -228,53 +227,15 @@ The query below first identifies the RBPs that are predicted to be present withi
 
 Query1:
 ```cypher
-MATCH (a:Code {CodeID: 'UBERON 0001088'})
-MATCH (b:Code) WHERE b.CodeID in ['ENSEMBL ENSG00000221461', 'ENSEMBL ENSG00000253190', 'ENSEMBL ENSG00000231764', 'ENSEMBL ENSG00000277027']
-MATCH (c:Code) WHERE c.CodeID in ['UNIPROTKB P05455', 'UNIPROTKB Q12874', 'UNIPROTKB Q9GZR7', 'UNIPROTKB Q9HAV4', 'UNIPROTKB Q2TB10']
+MATCH (a:Code {CodeID: 'UBERON:0001088'})
+MATCH (b:Code) WHERE b.CodeID in ['ENSEMBL:ENSG00000221461', 'ENSEMBL:ENSG00000253190', 'ENSEMBL:ENSG00000231764', 'ENSEMBL:ENSG00000277027']
+MATCH (c:Code) WHERE c.CodeID in ['UNIPROTKB:P05455', 'UNIPROTKB:Q12874', 'UNIPROTKB:Q9GZR7', 'UNIPROTKB:Q9HAV4', 'UNIPROTKB:Q2TB10']
 MATCH (a)<-[:CODE]-(:Concept)<-[:predicted_in]-(p:Concept)-[:CODE]->(c)
 MATCH (p)-[:molecularly_interacts_with]->(q:Concept)-[:overlaps]->(:Concept)-[:CODE]->(b)
 MATCH (q)-[:CODE]->(r:Code)
 RETURN DISTINCT c.CodeID AS RBP,r.CodeID AS RBS,b.CodeID AS Gene,a.CodeID AS Biosample;
 ```
 
-The query below differs from the first query in that it considers a different set of RBP loci. In this case, we query genetic loci that are the result of removing overlaps from eCLIP peaks across RBPs.
-
-Query2:
-```cypher
-MATCH (a:Code {CodeID: 'UBERON 0001088'})
-MATCH (b:Code) WHERE b.CodeID in ['ENSEMBL ENSG00000221461', 'ENSEMBL ENSG00000253190', 'ENSEMBL ENSG00000231764', 'ENSEMBL ENSG00000277027']
-MATCH (c:Code) WHERE c.CodeID in ['UNIPROTKB P05455', 'UNIPROTKB Q12874', 'UNIPROTKB Q9GZR7', 'UNIPROTKB Q9HAV4', 'UNIPROTKB Q2TB10']
-MATCH (a)<-[:CODE]-(:Concept)<-[:predicted_in]-(p:Concept)-[:CODE]->(c)
-MATCH (p)-[:molecularly_interacts_with]->(:Concept)<-[:is_subsequence_of]-(q:Concept)-[:CODE]->(r:Code)
-MATCH (q)-[:overlaps]-(:Concept)-[:CODE]->(b)
-RETURN DISTINCT c.CodeID AS RBP,r.CodeID AS RBS,b.CodeID AS Gene,a.CodeID AS Biosample;
-```
-
-In the following query, we constrain the queried non-overlapping RBP loci to those that are covered by at least 2 reads in 10 percent of samples taken from the target biofluid of healthy controls available on the exRNA Atlas. 
-
-Query3:
-```cypher
-MATCH (a:Code {CodeID: 'UBERON 0001088'})
-MATCH (b:Code) WHERE b.CodeID in ['ENSEMBL ENSG00000221461', 'ENSEMBL ENSG00000253190', 'ENSEMBL ENSG00000231764', 'ENSEMBL ENSG00000277027']
-MATCH (c:Code) WHERE c.CodeID in ['UNIPROTKB P05455', 'UNIPROTKB Q12874', 'UNIPROTKB Q9GZR7', 'UNIPROTKB Q9HAV4', 'UNIPROTKB Q2TB10']
-MATCH (a)<-[:CODE]-(p:Concept)<-[:predicted_in]-(q:Concept)-[:CODE]->(c)
-MATCH (q)-[:molecularly_interacts_with]->(:Concept)<-[:is_subsequence_of]-(r:Concept)-[:CODE]->(s:Code)
-MATCH (p)<-[]-(r)-[:overlaps]->(:Concept)-[:CODE]->(b)
-RETURN DISTINCT c.CodeID AS RBP,s.CodeID AS RBS,b.CodeID AS Gene,a.CodeID AS Biosample;
-```
-
-In our final example query, we add another constraint to the RBP loci. In this case we consider only non-overlapping RBP loci that meet the coverage cutoff stated above, and whose coverage across biofluid-specific control samples in the exRNA Atlas is significantly correlated with the coverage of other loci from the same RBP.
-
-Query4:
-```cypher
-MATCH (a:Code {CodeID: 'UBERON 0001088'})
-MATCH (b:Code) WHERE b.CodeID in ['ENSEMBL ENSG00000221461', 'ENSEMBL ENSG00000253190', 'ENSEMBL ENSG00000231764', 'ENSEMBL ENSG00000277027']
-MATCH (c:Code) WHERE c.CodeID in ['UNIPROTKB P05455', 'UNIPROTKB Q12874', 'UNIPROTKB Q9GZR7', 'UNIPROTKB Q9HAV4', 'UNIPROTKB Q2TB10']
-MATCH (a)<-[:CODE]-(p:Concept)<-[:predicted_in]-(q:Concept)-[:CODE]->(c)
-MATCH (q)-[:molecularly_interacts_with]->(:Concept)<-[:is_subsequence_of]-(r:Concept)-[:CODE]->(s:Code)
-MATCH (p)<-[:correlated_in]-(r)-[:overlaps]->(:Concept)-[:CODE]->(b)
-RETURN DISTINCT c.CodeID AS RBP,s.CodeID AS RBS,b.CodeID AS Gene,a.CodeID AS Biosample;
-```
 
 ##### Regulatory Element
 
@@ -282,7 +243,7 @@ Knowledge encoded in the assertions relating to regulatory elements allow users 
 
 Query1:
 ```cypher
-MATCH (a:Code {CodeID: 'UBERON 0002367'})
+MATCH (a:Code {CodeID: 'UBERON:0002367'})
 MATCH (a)<-[:CODE]-(p:Concept)-[:part_of]->(q:Concept)-[:CODE]->(:Code {SAB: 'ENCODE.CCRE.ACTIVITY'})
 MATCH (q)<-[:part_of]-(r:Concept)-[:CODE]->(s:Code {SAB: 'ENCODE.CCRE'})
 RETURN DISTINCT a.CodeID AS Tissue,s.CodeID AS cCRE
@@ -292,7 +253,7 @@ In our next example query, we again retrieve the regulatory elements active with
 
 Query2:
 ```cypher
-MATCH (a:Code {CodeID: 'UBERON 0002367'})
+MATCH (a:Code {CodeID: 'UBERON:0002367'})
 MATCH (a)<-[:CODE]-(p:Concept)-[:part_of]->(q:Concept)-[:CODE]->(:Code {SAB: 'ENCODE.CCRE.ACTIVITY'})
 MATCH (q)<-[:part_of]-(r:Concept)<-[:located_in]-(:Concept)-[:part_of]->(:Concept)<-[:part_of]-(:Concept)-[:CODE]->(a)
 MATCH (r)-[:CODE]->(s:Code {SAB: 'ENCODE.CCRE'})
@@ -303,8 +264,8 @@ Our third example query demonstrates how to retrieve information to identify the
 
 Query3:
 ```cypher
-MATCH (a:Code {CodeID: 'UBERON 0002367'})
-MATCH (b:Code {CodeID: 'ENCODE.CCRE EH38E3881508'})
+MATCH (a:Code {CodeID: 'UBERON:0002367'})
+MATCH (b:Code {CodeID: 'ENCODE.CCRE:EH38E3881508'})
 MATCH (a)<-[:CODE]-(:Concept)-[:part_of]->(p:Concept)<-[:part_of]-(:Concept)-[:CODE]->(b)
 MATCH (p)-[:isa]->(:Concept)-[:CODE]->(q:Code {SAB: 'ENCODE.CCRE.H3K27AC'})
 MATCH (p)-[:isa]->(:Concept)-[:CODE]->(r:Code {SAB: 'ENCODE.CCRE.H3K4ME3'})
@@ -316,11 +277,10 @@ In our final example query we show how to retrieve the genes whose body lies wit
 
 Query4:
 ```cypher
-MATCH (a:Code {CodeID: 'ENCODE.CCRE EH38E3881508'})
-MATCH (a)<-[:CODE]-(:Concept)-[:part_of]->(:Concept)-[:regulates]->(:Concept)-[:CODE]->(p:Code {SAB: 'ENSEMBL'})
+MATCH (a:Code {CodeID: 'ENCODE.CCRE:EH38E3881508'})
+MATCH (a)<-[:CODE]-(:Concept)-[:part_of]->(:Concept)-[:regulates]->(:Concept)-[:CODE]->(p:Code {SAB:'ENSEMBL'})
 RETURN DISTINCT a.CodeID AS cCRE,p.CodeID AS Gene
 ```
-
 
 
 # Queries to reproduce the figures in the [Data Dictionary](DataDistilleryDataDictionary.md)
@@ -385,7 +345,7 @@ This query uses the `PROTEOFORM` SAB in GlyGen data. The query extracts the `GLY
 
 ```cypher
 MATCH (glycan_code:Code {SAB:'GLYTOUCAN'})<-[:CODE]-(glycan_concept:Concept)<-[r1:has_saccharide {SAB:'PROTEOFORM'}]-(site_concept:Concept)-[:CODE]->(site_code:Code {SAB:'GLYCOSYLATION.SITE'}),//Saccaride and glycosylation site
-(site_concept:Concept)-[r2:location {SAB:'PROTEOFORM'}]->(location_concept:Concept)-[:CODE]->(location_code:Code {SAB:'GLYGEN.LOCATION'})-[:PROTEOFORM_PT]->(location_term:Term),//Location
+(site_concept:Concept)-[r2:location {SAB:'PROTEOFORM'}]->(location_concept:Concept)-[:CODE]->(location_code:Code {SAB:'GLYGEN.LOCATION'})-[]->(location_term:Term),//Location
 (location_concept:Concept)-[r3:has_amino_acid {SAB:'PROTEOFORM'}]->(amino_acid_concept:Concept)-[:CODE]->(amino_acid_code:Code {SAB:'AMINO.ACID'}),//Amino acid
 (site_concept:Concept)<-[r4:glycosylated_at {SAB:'PROTEOFORM'}]-(glycoprotein_concept:Concept)-[:CODE]->(glycoprotein_code:Code {SAB:'GLYCOPROTEIN'}),//Glycoprotein
 (glycoprotein_concept:Concept)-[r5:sequence {SAB:'PROTEOFORM'}]->(isoform_concept:Concept)-[:CODE]->(isoform_code:Code {SAB:'UNIPROTKB.ISOFORM'}),//Isoform
@@ -400,7 +360,7 @@ This query uses the `GLYCANS` SAB from the GlyGen data. The query extracts the `
 MATCH (glycan_code:Code {SAB:'GLYTOUCAN'})<-[:CODE]-(glycan_concept:Concept)-[r1:synthesized_by {SAB:'GLYCANS'}]->(glycosylation_concept:Concept)-[:CODE]->(glycosylation_code:Code {SAB:'GLYCOSYLTRANSFERASE.REACTION'}),//Glycans and glycosyltransferase reactions
 (glycan_concept:Concept)-[r2:has_canonical_residue {SAB:'GLYCANS'}]->(residue_concept:Concept)-[:CODE]->(residue_code:Code {SAB:'GLYGEN.RESIDUE'}),//Residues
 (glycan_concept:Concept)-[r3:has_motif {SAB:'GLYCANS'}]->(motif_concept:Concept)-[:CODE]->(motif_code:Code {SAB:'GLYCAN.MOTIF'}),//Motifs
-(glycan_concept:Concept)-[r4:has_glycosequence {SAB:'GLYCANS'}]->(glycosequence_concept:Concept)-[:CODE]->(glycosequence_code:Code {SAB:'GLYGEN.GLYCOSEQUENCE'})-[:GLYCANS_PT]->(glycosequence_term:Term),//Glycosequence
+(glycan_concept:Concept)-[r4:has_glycosequence {SAB:'GLYCANS'}]->(glycosequence_concept:Concept)-[:CODE]->(glycosequence_code:Code {SAB:'GLYGEN.GLYCOSEQUENCE'})-[]->(glycosequence_term:Term),//Glycosequence
 (residue_concept:Concept)-[r5:attached_by {SAB:'GLYCANS'}]->(reaction_concept:Concept)-[:CODE]->(reaction_code:Code {SAB:'GLYGEN.GLYCOSYLATION'}),//Glycosylation
 (reaction_concept:Concept)-[r6:has_enzyme_protein {SAB:'GLYCANS'}]->(glycoenzyme_concept:Concept)-[:CODE]->(glycoenzyme_code:Code {SAB:'UNIPROTKB'}),//Glycoenzyme
 (glycan_concept:Concept)-[r7:is_from_source {SAB:'GLYCANS'}]->(source_concept:Concept)-[:CODE]->(source_code:Code {SAB:'GLYGEN.SRC'})//Glygen source
@@ -433,7 +393,7 @@ RETURN * LIMIT 1
 The query extracts genes associated with the HubMAP Azimuth dataset (node SAB: `AZ`, edge SAB: `HMAZ`) clusters in human heart, liver and kidney tissues.
 
 ```cypher
-MATCH (azimuth_term:Term)-[:PT]-(azimuth_code:Code {SAB:"AZ"})-[:CODE]-(azimuth_concept:Concept)-[r1 {SAB:"HMAZ"}]->(gene_concept:Concept)-[:CODE]-(gene_code:Code {SAB:"HGNC"}), (azimuth_concept:Concept)-[:isa]->(CL_concept:Concept)-[:CODE]-(CL_code:Code {SAB:"CL"})-[:PT]-(CL_term:Term) RETURN * LIMIT 1
+MATCH (azimuth_term:Term)<-[]-(azimuth_code:Code {SAB:"AZ"})-[:CODE]-(azimuth_concept:Concept)-[r1 {SAB:"HMAZ"}]->(gene_concept:Concept)-[:CODE]-(gene_code:Code {SAB:"HGNC"}) RETURN * LIMIT 1
 ```
 <img src="images/HuBMAP-Az-schema-diagram.png" width="750" height="500">
 
@@ -470,10 +430,10 @@ Example 2b: Continuing from example 2a (where we found all genes in UBKG that ar
 
 ```cypher 
 MATCH (tissue_concept:Concept)-[:CODE]->(tissue_code:Code {SAB:"GTEXEXP"})
-MATCH (gene_concept:Concept)-[:CODE]->(gene_code:Code {SAB:HGNC'})
+MATCH (gene_concept:Concept)-[:CODE]->(gene_code:Code {SAB:'HGNC'})
 MATCH (pubchem_concept:Concept)-[:CODE]->(pubchem_code:Code {SAB:'PUBCHEM'})
 MATCH (protein_concept:Concept)-[:CODE]->(protein_code:Code {SAB:"UNIPROTKB"})
-MATCH (tissue_concept)-[r1:expressed_in {SAB:"GTEXEXP"}]-(gene_concept)-[r2 {SAB:LINCS'}]-(pubchem_concept)-[r3:bioactivity {SAB:'IDGP'}]-(protein_concept)
+MATCH (tissue_concept)-[r1:expressed_in {SAB:"GTEXEXP"}]-(gene_concept)-[r2 {SAB:'LINCS'}]-(pubchem_concept)-[r3:bioactivity {SAB:'IDGP'}]-(protein_concept)
 RETURN * LIMIT 5
 ```
 
@@ -485,7 +445,7 @@ Example 2c: Considering data from IDG-DrugCentral and LINCS, we next find all ge
 
 ```cypher 
 MATCH (gene_concept:Concept)-[:CODE]->(gene_code:Code{SAB:'HGNC'})
-MATCH (snomed_concept:Concept)-[:CODE]-(snomed_code:Code {SAB:'SNOMEDCT_US'})-[:PT]-(snomed_term:Term)
+MATCH (snomed_concept:Concept)-[:CODE]-(snomed_code:Code {SAB:'SNOMEDCT_US'})-[]-(snomed_term:Term)
 MATCH (pubchem_concept:Concept)-[:CODE]-(pubchem_code:Code {SAB:'PUBCHEM'})
 MATCH (gene_concept)-[r1 {SAB:'LINCS'}]-(pubchem_concept)-[r2:indication {SAB:'IDGD'}]-(snomed_concept)
 WHERE snomed_term.name="Parkinson's disease"
@@ -500,7 +460,7 @@ Example 2d: Find genes and compounds associated with the birth defect “Congeni
 
 ```cypher 
 WITH ['Congenital diaphragmatic hernia'] as birthDefects
-MATCH (hpo_concept:Concept)-[:CODE]-(hpo_code:Code {SAB:'HPO'})-[:PT]-(hpo_term:Term)
+MATCH (hpo_concept:Concept)-[:CODE]-(hpo_code:Code {SAB:'HP'})-[]-(hpo_term:Term)
 MATCH (gene_concept:Concept)-[:CODE]->(gene_code:Code{SAB:'HGNC'})
 MATCH (pubchem_concept:Concept)-[:CODE]->(pubchem_code:Code {SAB:'PUBCHEM'})
 MATCH gr=(hpo_concept)-[r1:associated_with]-(gene_concept)-[r2 {SAB:'LINCS'}]-(pubchem_concept)
@@ -521,7 +481,7 @@ Example 3a: Combining data from IDG-DrugCentral and LINCS, below are the results
 
 ```cypher 
 WITH ['Asthma'] as theDisease
-MATCH (hpo_concept:Concept)-[:CODE]-(hpo_code:Code {SAB:'HPO'})-[:PT]-(hpo_term:Term)
+MATCH (hpo_concept:Concept)-[:CODE]-(hpo_code:Code {SAB:'HP'})-[]->(hpo_term:Term)
 MATCH (gene_concept:Concept)-[:CODE]->(gene_code:Code{SAB:'HGNC'})
 MATCH (pubchem_concept:Concept)-[:CODE]->(pubchem_code:Code {SAB:'PUBCHEM'})
 MATCH gr=(hpo_concept)-[r1:associated_with]-(gene_concept)-[r2 {SAB:'LINCS'}]-(pubchem_concept)
@@ -560,9 +520,7 @@ Example 3c: In order to investigate the unique tissue types associated with the 
 ```cypher 
 MATCH (uniprot_cui)-[:gene_product_of]->(hgnc_cui:Concept)-[:CODE]->(hgnc_code:Code {SAB:'HGNC'})-[]->(hgnc_term:Term {name:'ALOX5'})
 MATCH (hgnc_cui)-[:expresses]->(gtexexp_cui:Concept)-[:CODE]->(gtexexp_code:Code {SAB:'GTEXEXP'})
-MATCH (expbins_code:Code {SAB:'EXPBINS'})<-[:CODE]-(expbins_cui:Concept)-[:has_expression]-(gtexexp_cui)-[:expressed_in]->(ub_cui:Concept)-[:CODE]->(ub_code:Code {SAB:'UBERON'})-[:PT]-(ub_term:Term)
-MATCH (ub_cui)-[:PREF_TERM]->(ub_term:Term)
-MATCH (pubchem_cui2)-[:PREF_TERM]-(pubchem_2_term:Term)
+MATCH (expbins_code:Code {SAB:'EXPBINS'})<-[:CODE]-(expbins_cui:Concept)-[:has_expression]-(gtexexp_cui)-[:expressed_in]->(ub_cui:Concept)-[:CODE]->(ub_code:Code {SAB:'UBERON'})-[]->(ub_term:Term)
 RETURN distinct ub_term.name
 ```
 
@@ -579,7 +537,7 @@ The above query returns several locations of human cells expressing ALOX5 includ
 Show the `belongs_to_cohort` relationship between a `KFPT` node (Kids First Patient) and a `KFCOHORT` (Kids First Cohort) node as well as the `KFGENEBIN` node:
 ```cypher
 MATCH (kf_pt_code:Code {SAB:'KFPT'})-[r0:CODE]-(kf_pt_cui)-[r1:belongs_to_cohort]-(kf_cohort_cui:Concept)-[r2:CODE]-(kf_cohort_code:Code {SAB:'KFCOHORT'})
-MATCH (kf_pt_cui)-[r3:has_phenotype]-(hpo_cui)-[r4:CODE]-(hpo_code:Code {SAB:'HPO'})
+MATCH (kf_pt_cui)-[r3:has_phenotype]-(hpo_cui)-[r4:CODE]-(hpo_code:Code {SAB:'HP'})
 MATCH (kf_cohort_cui)-[r5:belongs_to_cohort]-(kfgenebin_cui)-[r6:CODE]-(kfgenebin_code:Code {SAB:'KFGENEBIN'})
 MATCH (kfgenebin_cui)-[r7:gene_has_variants]-(hgnc_cui:Concept)-[r8:CODE]-(hgnc_code:Code {SAB:'HGNC'})
 RETURN * LIMIT 1
@@ -591,7 +549,7 @@ Show the `LINCS` relationship which maps `HGNC` nodes to `PUBCHEM` nodes (there 
 ```cypher
 MATCH (hgnc_cui:Concept)-[:CODE]->(hgnc_code:Code {SAB:'HGNC'})-[]->(hgnc_term:Term)
 MATCH (hgnc_cui)-[:positively_regulated_by {SAB:'LINCS'}]-(pubchem_cui_1:Concept)-[:CODE]-(pubchem_code_1:Code {SAB:'PUBCHEM'})
-MATCH (pubchem_cui_1:Concept)-[:in_similarity_relationship_with {SAB:'LINS'}]-(pubchem_cui_2:Concept)-[:CODE]-(pubchem_code_2:Code {SAB:'PUBCHEM'})
+MATCH (pubchem_cui_1:Concept)-[:in_similarity_relationship_with {SAB:'LINCS'}]-(pubchem_cui_2:Concept)-[:CODE]-(pubchem_code_2:Code {SAB:'PUBCHEM'})
 RETURN * LIMIT 1 
 ```
 
@@ -603,7 +561,6 @@ MATCH (mp_cui:Concept)-[:CODE]->(mp_code:Code {SAB:'MOTRPAC'})
 WHERE mp_code.CODE CONTAINS 'liver'
 MATCH (mp_cui)-[:associated_with {SAB:'MOTRPAC'}]-(ensRat_cui:Concept)-[:CODE]->(ensRat_code:Code {SAB:'ENSEMBL'})
 MATCH (ensRat_cui)-[:has_human_ortholog]-(ensHum_cui:Concept)-[:CODE]-(ensHum_code:Code {SAB:'ENSEMBL'})-[]-(ensHum_term:Term)
-MATCH (ensHum_cui)-[:RO ]-(hgnc_cui:Concept)-[:CODE]-(hgnc_code:Code {SAB:'HGNC'})-[:ACR]-(hgnc_term:Term)
 MATCH (mp_cui)-[:sex {SAB:'MOTRPAC'}]->(pato_cui:Concept)-[:PREF_TERM]-(pato_term:Term)
 RETURN * LIMIT 1
 ```
@@ -620,7 +577,7 @@ RETURN * LIMIT 1
 
 Show an `ILX` node and its relationship to an `UBERON` node.
 ```cypher
-MATCH (ub_term:Term)-[a:PT]-(uberon_code:Code)-[b:CODE]-(ub_cui:Concept)-[c:isa {SAB:'NPO'}]-(ilx_cui:Concept)-[d:CODE]-(ilx_code:Code {SAB:'ILX'})-[e:PT_NPOSKCAN]-(ilx_term:Term) 
+MATCH (ub_term:Term)-[]-(uberon_code:Code)-[b:CODE]-(ub_cui:Concept)-[c:isa {SAB:'NPO'}]-(ilx_cui:Concept)-[d:CODE]-(ilx_code:Code {SAB:'ILX'})-[e:PT_NPOSKCAN]-(ilx_term:Term) 
 RETURN * LIMIT 1
 ```
 
@@ -629,24 +586,23 @@ RETURN * LIMIT 1
 
 - You might notice that some queries have a `MATCH` statement for every line such as these [GTEx queries](CFDE_DataDistillery_UserGuide.md#genotype-tissue-expression-gtex), while other queries have a single `MATCH` statement followed by several patterns seperated by a comma such as these [GlyGen queries](CFDE_DataDistillery_UserGuide.md#glygen-1). Both styles produce identical query plans, they just represent two different syntax styles.
 
-- Most of the queries in this tutorial should not take long to run (<10 seconds). But in general, to speed up the run time of a query it can be helpful to start with the smaller dataset or even a single node if possible. For example, if you know you want to search for a specific gene and the phenotypes it is related to, you would first want to `MATCH` on the gene and then on the relationships to the `HPO` dataset.
+- Most of the queries in this tutorial should not take long to run (<10 seconds). But in general, to speed up the run time of a query it can be helpful to start with the smaller dataset or even a single node if possible. For example, if you know you want to search for a specific gene and the phenotypes it is related to, you would first want to `MATCH` on the gene and then on the relationships to the `HP` dataset.
 
 Here is an example using Cypher:
 
 This query, where we `MATCH` on the `HGNC` gene of interest first, returns results in ~30ms.
 ```cypher
 MATCH (hgnc_code:Code {CODE:'7881'})
-MATCH (hgnc_code)-[:CODE]-(hgnc_cui)-[r]-(hpo_cui:Concept)-[:CODE]-(hpo_code:Code {SAB:'HPO'})
+MATCH (hgnc_code)-[:CODE]-(hgnc_cui)-[r]-(hpo_cui:Concept)-[:CODE]-(hpo_code:Code {SAB:'HP'})
 RETURN DISTINCT hgnc_code.CodeID, hpo_code.CodeID
 ```
 
-meanwhile, this query, where we `MATCH` on the `HPO` dataset first, returns results in ~700ms.
+meanwhile, this query, where we `MATCH` on the `HP` dataset first, returns results in ~700ms.
 ```cypher
-MATCH (hpo_cui)-[:CODE]-(hpo_code:Code {SAB:'HPO'})
+MATCH (hpo_cui)-[:CODE]-(hpo_code:Code {SAB:'HP'})
 MATCH (hpo_cui)-[r]-(hgnc_cui)-[:CODE]-(hgnc_code:Code {CODE:'7881'})
 RETURN DISTINCT hgnc_code.CodeID, hpo_code.CodeID
 ```
 The total run time for both queries is short because `HPO` is a small dataset, but the first query still runs over 20x faster. The speed up will be magnified if you are dealing with some of the larger datasets in the graph such as `GTEX` and `ERCC`.
 
 Also, note that run times will vary from system to system but the relative speed up should be consistent. Additionally, Neo4j performs query caching, so if you are timing your own query run times just know that after you run a query for the first time Neo4j will cache the query and any identical queries submitted afterwards will be checked and (if found) returned much more quickly. This can make finding an 'average' run time of a query difficult and misleading if you're simply running the same query again and again. You can read about Neo4j's query caching [here](https://neo4j.com/developer/kb/understanding-the-query-plan-cache/).
-
