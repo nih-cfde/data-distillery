@@ -1,4 +1,4 @@
-# User Guide for the August 2025 release of the Data Distillery Knowledge Graph
+# User Guide for the August 29th, 2025 release of the Data Distillery Knowledge Graph
 Authors: Ben Stear, Taha Mohseni Ahooyi, Deanne Taylor, Jonathan Silverstein, Alan Simmons
 ## Guide for exploring the Data Distillery knowledge graph using Cypher
 ---------
@@ -7,13 +7,13 @@ Authors: Ben Stear, Taha Mohseni Ahooyi, Deanne Taylor, Jonathan Silverstein, Al
 
 --------
 This guide has 4 sections:
-1. [Introduction](/DataDistilleryAugust2025/DD_August2025_userguide.md#introduction)
+1. [Introduction](/DataDistillery29August2025/DD_29August2025_userguide.md#introduction)
 
-2. [Use Cases](/DataDistilleryAugust2025/DD_August2025_userguide.md#dcc-use-cases)
+2. [Use Cases](/DataDistillery29August2025/DD_29August2025_userguide.md#dcc-use-cases)
 
-3. [Queries to reproduce Data Dictionary figures](/DataDistilleryAugust2025/DD_August2025_userguide.md#queries-to-reproduce-the-figures-in-the-data-dictionary)
+3. [Queries to reproduce Data Dictionary figures](/DataDistillery29August2025/DD_29August2025_userguide.md#queries-to-reproduce-the-figures-in-the-data-dictionary)
 
-4. [Tips and Tricks](/DataDistilleryAugust2025/DD_August2025_userguide.md#tips-and-tricks)
+4. [Tips and Tricks](/DataDistillery29August2025/DD_29August2025_userguide.md#tips-and-tricks)
 
 --------
 ## Introduction
