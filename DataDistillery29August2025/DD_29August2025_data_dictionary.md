@@ -8,6 +8,7 @@ For the first phase of the project, the participating DCCs have submitted 29 dif
 
 ![](images/distillery-dataset-diagram.png)
 
+
 ## Base Datasets
 
 Information on the base set of ontologies included in the Data Distillery Knowledge Graph can be found in [the documentation for the Unified Biomedical Knowledge Graph (UBKG)](https://ubkg.docs.xconsortia.org/contexts/#ubkg-base-context-umls-plus), upon which the Data Distillery is built. See Figure 1 for a general schematic.
@@ -34,7 +35,7 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 ##### 4DN Schema Diagram
 
-![](images/4DN-schema-diagram.png)
+![](images/https://github.com/nih-cfde/data-distillery/blob/fix-figure-links/images/4DN-schema-diagram.png)
 
 ##### 4DN Node Counts
 
