@@ -35,7 +35,7 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 ##### 4DN Schema Diagram
 
-![](images/https://github.com/nih-cfde/data-distillery/blob/fix-figure-links/images/4DN-schema-diagram.png)
+![](https://github.com/nih-cfde/data-distillery/blob/fix-figure-links/images/4DN-schema-diagram.png)
 
 ##### 4DN Node Counts
 
