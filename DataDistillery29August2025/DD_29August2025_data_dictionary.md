@@ -6,7 +6,7 @@ The Data Distillery project aims to integrate summarized ("distilled") Common Fu
 
 For the first phase of the project, the participating DCCs have submitted 29 different datasets for integration into the DDKG This document is focused on outlining these 29 datasets within the DDKG, and describing the schema and information on each dataset.
 
-![](images/distillery-dataset-diagram.png)
+![](../images/distillery-dataset-diagram.png)
 
 
 ## Base Datasets
