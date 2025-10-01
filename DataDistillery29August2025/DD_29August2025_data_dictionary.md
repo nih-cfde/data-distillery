@@ -6,7 +6,8 @@ The Data Distillery project aims to integrate summarized ("distilled") Common Fu
 
 For the first phase of the project, the participating DCCs have submitted 29 different datasets for integration into the DDKG This document is focused on outlining these 29 datasets within the DDKG, and describing the schema and information on each dataset.
 
-![](images/distillery-dataset-diagram.png)
+![](../images/distillery-dataset-diagram.png)
+
 
 ## Base Datasets
 
@@ -34,7 +35,7 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 ##### 4DN Schema Diagram
 
-![](images/4DN-schema-diagram.png)
+![](../images/4DN-schema-diagram.png)
 
 ##### 4DN Node Counts
 
@@ -83,7 +84,7 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 ##### ERCC RBP Schema Diagram
 
-![](images/ERCC-RBP-schema-diagram.png)
+![](../images/ERCC-RBP-schema-diagram.png)
 
 ##### ERCC RBP Node Counts
 
@@ -136,7 +137,7 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 ##### ERCC Regulatory Element Schema Diagram
 
-![](images/ERCC-Regulatory-Element-Schema-Diagram.png)
+![](../images/ERCC-Regulatory-Element-Schema-Diagram.png)
 
 ##### ERCC Regulatory Element Node Counts
 
@@ -189,11 +190,11 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 ##### GlyGen GLYCANS Schema Diagram
 
-![](images/GlyGen-GLYCANS-schema-diagram.png)
+![](../images/GlyGen-GLYCANS-schema-diagram.png)
 
 ##### GlyGen PROTEOFORM Schema Diagram
 
-![](images/GlyGen-PROTEOFORM-schema-diagram.png)
+![](../images/GlyGen-PROTEOFORM-schema-diagram.png)
 
 ##### GlyGen FALDO Node Counts
 
@@ -334,11 +335,11 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 ##### GTEx GTEXEXP Schema Diagram
 
-![](images/GTEx-GTEXEXP-schema-diagram.png)
+![](../images/GTEx-GTEXEXP-schema-diagram.png)
 
 ##### GTEx GTEXQTL Schema Diagram
 
-![](images/GTEx-GTEXEQTL-schema-diagram.png)
+![](../images/GTEx-GTEXEQTL-schema-diagram.png)
 
 ##### GTEx GTEXEXP/EXPBINS Node Counts
 
@@ -460,7 +461,7 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 ##### HuBMAP Az Schema Diagram
 
-![](images/HuBMAP-Az-schema-diagram.png)
+![](../images/HuBMAP-Az-schema-diagram.png)
 
 ##### HuBMAP Az Node Counts
 
@@ -499,7 +500,7 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 ##### IDG Schema Diagram
 
-![](images/IDG-schema-diagram.png)
+![](../images/IDG-schema-diagram.png)
 
 ##### IDG IDGP (compound/protein) Node Counts
 
@@ -547,7 +548,7 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 ##### GMKF Schema Diagram
 
-![](images/GMKF-schema-diagram.png)
+![](../images/GMKF-schema-diagram.png)
 
 ##### GMKF Node Counts
 
@@ -588,7 +589,7 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 ##### LINCS Schema Diagram
 
-![](images/LINCS-schema-diagram.png)
+![](../images/LINCS-schema-diagram.png)
 
 ##### LINCS Node Counts
 
@@ -627,7 +628,7 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 ##### MoTrPAC Schema Diagram
 
-![](images/MoTrPAC-schema-diagram.png)
+![](../images/MoTrPAC-schema-diagram.png)
 
 ##### MoTrPAC Node Counts
 
@@ -664,7 +665,7 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 ##### MW Schema Diagram
 
-![](images/MW-schema-diagram.png)
+![](../images/MW-schema-diagram.png)
 
 ##### MW Node Counts
 
@@ -713,7 +714,7 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 
 ##### SPARC Schema Diagram
 
-![](images/SPARC-schema-diagram.png)
+![](../images/SPARC-schema-diagram.png)
 
 ##### SPARC Node Counts
 
@@ -808,7 +809,7 @@ This set of assertions maps human ENSEMBL gene nodes to rat ENSEMBL gene nodes. 
 
 ### Reactome
 
-![](images/reactome.png)
+![](../images/reactome.png)
 ```cypher
 // Cypher query to reproduce the schema figure
 match (code1:Code {SAB:'REACTOME'})-[:CODE]-(cui1:Concept)-[{SAB:'REACTOME'}]-(cui3:Concept)-[:CODE]-(code3:Code {SAB:'GO'})
@@ -819,7 +820,7 @@ RETURN * limit 1
 
 ### WikiPathways
 
-![](images/wikipathways_schema.png)
+![](../images/wikipathways_schema.png)
 ```cypher
 // Cypher query to reproduce the schema figure
 match (t0:Term)-[:PT]-(code1:Code {SAB:'HGNC'})-[:CODE]-(cui1:Concept)-[{SAB:'WP'}]-(cui3:Concept)-[:CODE]-(code3:Code {SAB:'HGNC'})-[:PT]-(t:Term)
@@ -846,7 +847,7 @@ RETURN * limit 1
 
 ##### UNIPROTKB Schema Diagram
 
-![](images/uniprotkb_schema_v2.jpg)
+![](../images/uniprotkb_schema_v2.jpg)
 
 ##### UNIPROTKB Node Counts
 
@@ -882,10 +883,10 @@ The GENCODE schema corresponds to assertions that can be derived from the annota
 The types of relationships depend on whether the annotation is for a gene or a transcript.
 
 Gene annotation:
-![](images/GENCODE_gene_schema.jpg)
+![](../images/GENCODE_gene_schema.jpg)
 
 Transcript annotation:
-![](images/GENCODE_transcript_schema.jpg)
+![](../images/GENCODE_transcript_schema.jpg)
 
 ##### GENCODE Node Counts
 The UBKG features concept-code synonymy: e.g., if a gene has both ENSEMBL and HGNC IDs, the codes for those IDs share the same concept.
@@ -941,7 +942,7 @@ The GENCODE_VS SimpleKnowledge spreadsheet can be found [here](https://docs.goog
 | Total Edges                                      | 20,781                                                                                                                                                                                                                                           |
 
 ##### REFSEQ schema
-![](images/refseq_schema.jpg)
+![](../images/refseq_schema.jpg)
 
 ### AZ
 
@@ -960,4 +961,4 @@ The GENCODE_VS SimpleKnowledge spreadsheet can be found [here](https://docs.goog
 
 ##### AZ Schema Diagram
 
-![](images/az_schema.jpg)
+![](../images/az_schema.jpg)

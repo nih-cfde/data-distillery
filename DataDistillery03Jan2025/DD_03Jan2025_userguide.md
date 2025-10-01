@@ -152,7 +152,7 @@ WITH * MATCH (compound_concept:Concept)-[:PREF_TERM]-(compound:Term),
 (metabolite_concept:Concept)-[:PREF_TERM]-(metabolite:Term),
 (tissue_concept:Concept)-[:PREF_TERM]-(tissue:Term) RETURN DISTINCT * LIMIT 1
 ```
-<img src="images/IDG_MW.png" width="800" height="500">
+<img src="../images/IDG_MW.png" width="800" height="500">
 
 The following query will return a table version of the previous query:
 ```cypher
@@ -179,7 +179,7 @@ MATCH (motrpac_code:Code {SAB:"MOTRPAC"})<-[:CODE]-(motrpac_concept:Concept)-[r1
 (rat_gene_concept:Concept)-[:CODE]->(rat_gene_code:Code)
 RETURN * LIMIT 1
 ```
-<img src="images/MOTRPAC_LINCS_GTEX.jpg" width="700" height="580">
+<img src="../images/MOTRPAC_LINCS_GTEX.jpg" width="700" height="580">
 
 The following query will return a table version of the previous query:
 ```cypher
@@ -350,7 +350,7 @@ MATCH (loop_concept:Concept)-[r1:loop_us_start {SAB:'4DN'}
 ]->(assay_type_concept:Concept)-[:PREF_TERM]->(assay_type_term:Term)//Assay type associated with experiments
 RETURN * LIMIT 1
 ```
-<img src="images/4DN-schema-diagram.png" width="636" height="517">
+<img src="../images/4DN-schema-diagram.png" width="636" height="517">
 
 ### <ins>Extracellular RNA Communication Program (ERCC)</ins>
 
@@ -393,7 +393,7 @@ MATCH (glycan_code:Code {SAB:'GLYTOUCAN'})<-[:CODE]-(glycan_concept:Concept)<-[r
 (glycoprotein_concept:Concept)-[r7:has_evidence {SAB:'PROTEOFORM'}]->(evidence_concept:Concept)-[:CODE]->(evidence_code:Code {SAB:'GLYCOPROTEIN.EVIDENCE'})//Evidence
 RETURN * LIMIT 1
 ```
-<img src="images/GlyGen-PROTEOFORM-schema-diagram.png" width="900" height="500">
+<img src="../images/GlyGen-PROTEOFORM-schema-diagram.png" width="900" height="500">
 
 This query uses the `GLYCANS` SAB from the GlyGen data. The query extracts the `GLYGEN`-defined relationships between glycans (SAB:`GLYTOUCAN`) and the asscoiated residues, motifs, glycoreactions, glycoenzymes, glycosequences and source:
 ```cypher
@@ -406,7 +406,7 @@ MATCH (glycan_code:Code {SAB:'GLYTOUCAN'})<-[:CODE]-(glycan_concept:Concept)-[r1
 (glycan_concept:Concept)-[r7:is_from_source {SAB:'GLYCANS'}]->(source_concept:Concept)-[:CODE]->(source_code:Code {SAB:'GLYGEN.SRC'})//Glygen source
 RETURN * LIMIT 1
 ```
-<img src="images/GlyGen-GLYCANS-schema-diagram.png" width="750" height="550">
+<img src="../images/GlyGen-GLYCANS-schema-diagram.png" width="750" height="550">
 
 ### <ins>Genotype Tissue Expression (GTEx)</ins>
 
@@ -435,7 +435,7 @@ The query extracts genes associated with the HubMAP Azimuth dataset (node SAB: `
 ```cypher
 MATCH (azimuth_term:Term)-[:PT]-(azimuth_code:Code {SAB:"AZ"})-[:CODE]-(azimuth_concept:Concept)-[r1 {SAB:"HMAZ"}]->(gene_concept:Concept)-[:CODE]-(gene_code:Code {SAB:"HGNC"}), (azimuth_concept:Concept)-[:isa]->(CL_concept:Concept)-[:CODE]-(CL_code:Code {SAB:"CL"})-[:PT]-(CL_term:Term) RETURN * LIMIT 1
 ```
-<img src="images/HuBMAP-Az-schema-diagram.png" width="750" height="500">
+<img src="../images/HuBMAP-Az-schema-diagram.png" width="750" height="500">
 
 ### <ins>Illuminating the Druggable Genome (IDG)</ins>
 
