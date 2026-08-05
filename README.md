@@ -20,3 +20,10 @@ Quick links:
   - [UBKG ETL Source Code](https://github.com/x-atlas-consortia/ubkg-etl)
   - [UBKG Neo4j Source Code](https://github.com/x-atlas-consortia/ubkg-neo4j)
   - [UBKG API Source Code](https://github.com/x-atlas-consortia/ubkg-api)
+
+## License
+
+This repository is dedicated to the public domain under the Creative Commons
+CC0 1.0 Universal Public Domain Dedication. You are free to copy, modify,
+distribute, and reuse the materials, even for commercial purposes, without
+asking permission. See [LICENSE.md](LICENSE.md) for the full dedication.
