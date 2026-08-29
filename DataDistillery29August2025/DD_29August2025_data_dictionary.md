@@ -441,6 +441,248 @@ Information on the base set of ontologies included in the Data Distillery Knowle
 | GTEXCOEXP       | coexpression_Vagina                                        | HGNC           | 20,584     |
 | GTEXCOEXP       | coexpression_Whole_Blood                                   | HGNC           | 13,845     |
 
+
+##### EXPBINS bin scheme
+
+EXPBINS comprises 159 bins over median TPM values (GTEx v8 median gene TPM
+per gene and tissue). Binning is logarithmic by decade, with each decade from
+0.0007 to 300,000 TPM subdivided into steps of one ninth of the decade width,
+except the 10 to 100 TPM decade, which is subdivided at unit width (90 bins)
+to give finer resolution in the range where most expressed genes fall. Three
+special bins complete the scheme: an exact zero bin (EXPBINS:0.0.0.0), an
+initial bin spanning 0 to 0.0007 TPM, and a terminal bin spanning 100,000 to
+300,000 TPM. Bin identity is carried in the CodeID as EXPBINS:lower.upper
+(for example, EXPBINS:9.0.10.0 denotes 9 to 10 TPM). Bin nodes carry no
+numeric properties; selection is by CodeID. Because the dot serves both as
+the bound delimiter and the decimal separator, CodeIDs must not be parsed
+programmatically; use this table. [Endpoint convention: to be confirmed
+against the ingestion workflow; the documented construction places a value of
+10.5 in the 10 to 11 bin, consistent with lower inclusive intervals.]
+
+| Summary | TPM range | Bin width | Bins |
+|---|---|---|---|
+| Exact zero | 0 | point | 1 |
+| Initial | 0 to 0.0007 | single | 1 |
+| Sub-0.001 | 0.0007 to 0.001 | 0.0001 | 3 |
+| Decade | 0.001 to 0.01 | 0.001 | 9 |
+| Decade | 0.01 to 0.1 | 0.01 | 9 |
+| Decade | 0.1 to 1 | 0.1 | 9 |
+| Decade | 1 to 10 | 1 | 9 |
+| Fine decade | 10 to 100 | 1 | 90 |
+| Decade | 100 to 1,000 | 100 | 9 |
+| Decade | 1,000 to 10,000 | 1,000 | 9 |
+| Decade | 10,000 to 100,000 | 10,000 | 9 |
+| Terminal | 100,000 to 300,000 | single | 1 |
+
+##### EXPBINS complete bin table
+
+| CodeID | Lower (TPM) | Upper (TPM) |
+|---|---|---|
+| EXPBINS:0.0.0.0 | 0.0 | 0.0 |
+| EXPBINS:0.0.0.0007 | 0.0 | 0.0007 |
+| EXPBINS:0.0007.0.0008 | 0.0007 | 0.0008 |
+| EXPBINS:0.0008.0.0009 | 0.0008 | 0.0009 |
+| EXPBINS:0.0009.0.001 | 0.0009 | 0.001 |
+| EXPBINS:0.001.0.002 | 0.001 | 0.002 |
+| EXPBINS:0.002.0.003 | 0.002 | 0.003 |
+| EXPBINS:0.003.0.004 | 0.003 | 0.004 |
+| EXPBINS:0.004.0.005 | 0.004 | 0.005 |
+| EXPBINS:0.005.0.006 | 0.005 | 0.006 |
+| EXPBINS:0.006.0.007 | 0.006 | 0.007 |
+| EXPBINS:0.007.0.008 | 0.007 | 0.008 |
+| EXPBINS:0.008.0.009 | 0.008 | 0.009 |
+| EXPBINS:0.009.0.01 | 0.009 | 0.01 |
+| EXPBINS:0.01.0.02 | 0.01 | 0.02 |
+| EXPBINS:0.02.0.03 | 0.02 | 0.03 |
+| EXPBINS:0.03.0.04 | 0.03 | 0.04 |
+| EXPBINS:0.04.0.05 | 0.04 | 0.05 |
+| EXPBINS:0.05.0.06 | 0.05 | 0.06 |
+| EXPBINS:0.06.0.07 | 0.06 | 0.07 |
+| EXPBINS:0.07.0.08 | 0.07 | 0.08 |
+| EXPBINS:0.08.0.09 | 0.08 | 0.09 |
+| EXPBINS:0.09.0.1 | 0.09 | 0.1 |
+| EXPBINS:0.1.0.2 | 0.1 | 0.2 |
+| EXPBINS:0.2.0.3 | 0.2 | 0.3 |
+| EXPBINS:0.3.0.4 | 0.3 | 0.4 |
+| EXPBINS:0.4.0.5 | 0.4 | 0.5 |
+| EXPBINS:0.5.0.6 | 0.5 | 0.6 |
+| EXPBINS:0.6.0.7 | 0.6 | 0.7 |
+| EXPBINS:0.7.0.8 | 0.7 | 0.8 |
+| EXPBINS:0.8.0.9 | 0.8 | 0.9 |
+| EXPBINS:0.9.1.0 | 0.9 | 1.0 |
+| EXPBINS:1.0.2.0 | 1.0 | 2.0 |
+| EXPBINS:2.0.3.0 | 2.0 | 3.0 |
+| EXPBINS:3.0.4.0 | 3.0 | 4.0 |
+| EXPBINS:4.0.5.0 | 4.0 | 5.0 |
+| EXPBINS:5.0.6.0 | 5.0 | 6.0 |
+| EXPBINS:6.0.7.0 | 6.0 | 7.0 |
+| EXPBINS:7.0.8.0 | 7.0 | 8.0 |
+| EXPBINS:8.0.9.0 | 8.0 | 9.0 |
+| EXPBINS:9.0.10.0 | 9.0 | 10.0 |
+| EXPBINS:10.0.11.0 | 10.0 | 11.0 |
+| EXPBINS:11.0.12.0 | 11.0 | 12.0 |
+| EXPBINS:12.0.13.0 | 12.0 | 13.0 |
+| EXPBINS:13.0.14.0 | 13.0 | 14.0 |
+| EXPBINS:14.0.15.0 | 14.0 | 15.0 |
+| EXPBINS:15.0.16.0 | 15.0 | 16.0 |
+| EXPBINS:16.0.17.0 | 16.0 | 17.0 |
+| EXPBINS:17.0.18.0 | 17.0 | 18.0 |
+| EXPBINS:18.0.19.0 | 18.0 | 19.0 |
+| EXPBINS:19.0.20.0 | 19.0 | 20.0 |
+| EXPBINS:20.0.21.0 | 20.0 | 21.0 |
+| EXPBINS:21.0.22.0 | 21.0 | 22.0 |
+| EXPBINS:22.0.23.0 | 22.0 | 23.0 |
+| EXPBINS:23.0.24.0 | 23.0 | 24.0 |
+| EXPBINS:24.0.25.0 | 24.0 | 25.0 |
+| EXPBINS:25.0.26.0 | 25.0 | 26.0 |
+| EXPBINS:26.0.27.0 | 26.0 | 27.0 |
+| EXPBINS:27.0.28.0 | 27.0 | 28.0 |
+| EXPBINS:28.0.29.0 | 28.0 | 29.0 |
+| EXPBINS:29.0.30.0 | 29.0 | 30.0 |
+| EXPBINS:30.0.31.0 | 30.0 | 31.0 |
+| EXPBINS:31.0.32.0 | 31.0 | 32.0 |
+| EXPBINS:32.0.33.0 | 32.0 | 33.0 |
+| EXPBINS:33.0.34.0 | 33.0 | 34.0 |
+| EXPBINS:34.0.35.0 | 34.0 | 35.0 |
+| EXPBINS:35.0.36.0 | 35.0 | 36.0 |
+| EXPBINS:36.0.37.0 | 36.0 | 37.0 |
+| EXPBINS:37.0.38.0 | 37.0 | 38.0 |
+| EXPBINS:38.0.39.0 | 38.0 | 39.0 |
+| EXPBINS:39.0.40.0 | 39.0 | 40.0 |
+| EXPBINS:40.0.41.0 | 40.0 | 41.0 |
+| EXPBINS:41.0.42.0 | 41.0 | 42.0 |
+| EXPBINS:42.0.43.0 | 42.0 | 43.0 |
+| EXPBINS:43.0.44.0 | 43.0 | 44.0 |
+| EXPBINS:44.0.45.0 | 44.0 | 45.0 |
+| EXPBINS:45.0.46.0 | 45.0 | 46.0 |
+| EXPBINS:46.0.47.0 | 46.0 | 47.0 |
+| EXPBINS:47.0.48.0 | 47.0 | 48.0 |
+| EXPBINS:48.0.49.0 | 48.0 | 49.0 |
+| EXPBINS:49.0.50.0 | 49.0 | 50.0 |
+| EXPBINS:50.0.51.0 | 50.0 | 51.0 |
+| EXPBINS:51.0.52.0 | 51.0 | 52.0 |
+| EXPBINS:52.0.53.0 | 52.0 | 53.0 |
+| EXPBINS:53.0.54.0 | 53.0 | 54.0 |
+| EXPBINS:54.0.55.0 | 54.0 | 55.0 |
+| EXPBINS:55.0.56.0 | 55.0 | 56.0 |
+| EXPBINS:56.0.57.0 | 56.0 | 57.0 |
+| EXPBINS:57.0.58.0 | 57.0 | 58.0 |
+| EXPBINS:58.0.59.0 | 58.0 | 59.0 |
+| EXPBINS:59.0.60.0 | 59.0 | 60.0 |
+| EXPBINS:60.0.61.0 | 60.0 | 61.0 |
+| EXPBINS:61.0.62.0 | 61.0 | 62.0 |
+| EXPBINS:62.0.63.0 | 62.0 | 63.0 |
+| EXPBINS:63.0.64.0 | 63.0 | 64.0 |
+| EXPBINS:64.0.65.0 | 64.0 | 65.0 |
+| EXPBINS:65.0.66.0 | 65.0 | 66.0 |
+| EXPBINS:66.0.67.0 | 66.0 | 67.0 |
+| EXPBINS:67.0.68.0 | 67.0 | 68.0 |
+| EXPBINS:68.0.69.0 | 68.0 | 69.0 |
+| EXPBINS:69.0.70.0 | 69.0 | 70.0 |
+| EXPBINS:70.0.71.0 | 70.0 | 71.0 |
+| EXPBINS:71.0.72.0 | 71.0 | 72.0 |
+| EXPBINS:72.0.73.0 | 72.0 | 73.0 |
+| EXPBINS:73.0.74.0 | 73.0 | 74.0 |
+| EXPBINS:74.0.75.0 | 74.0 | 75.0 |
+| EXPBINS:75.0.76.0 | 75.0 | 76.0 |
+| EXPBINS:76.0.77.0 | 76.0 | 77.0 |
+| EXPBINS:77.0.78.0 | 77.0 | 78.0 |
+| EXPBINS:78.0.79.0 | 78.0 | 79.0 |
+| EXPBINS:79.0.80.0 | 79.0 | 80.0 |
+| EXPBINS:80.0.81.0 | 80.0 | 81.0 |
+| EXPBINS:81.0.82.0 | 81.0 | 82.0 |
+| EXPBINS:82.0.83.0 | 82.0 | 83.0 |
+| EXPBINS:83.0.84.0 | 83.0 | 84.0 |
+| EXPBINS:84.0.85.0 | 84.0 | 85.0 |
+| EXPBINS:85.0.86.0 | 85.0 | 86.0 |
+| EXPBINS:86.0.87.0 | 86.0 | 87.0 |
+| EXPBINS:87.0.88.0 | 87.0 | 88.0 |
+| EXPBINS:88.0.89.0 | 88.0 | 89.0 |
+| EXPBINS:89.0.90.0 | 89.0 | 90.0 |
+| EXPBINS:90.0.91.0 | 90.0 | 91.0 |
+| EXPBINS:91.0.92.0 | 91.0 | 92.0 |
+| EXPBINS:92.0.93.0 | 92.0 | 93.0 |
+| EXPBINS:93.0.94.0 | 93.0 | 94.0 |
+| EXPBINS:94.0.95.0 | 94.0 | 95.0 |
+| EXPBINS:95.0.96.0 | 95.0 | 96.0 |
+| EXPBINS:96.0.97.0 | 96.0 | 97.0 |
+| EXPBINS:97.0.98.0 | 97.0 | 98.0 |
+| EXPBINS:98.0.99.0 | 98.0 | 99.0 |
+| EXPBINS:99.0.100.0 | 99.0 | 100.0 |
+| EXPBINS:100.0.200.0 | 100.0 | 200.0 |
+| EXPBINS:200.0.300.0 | 200.0 | 300.0 |
+| EXPBINS:300.0.400.0 | 300.0 | 400.0 |
+| EXPBINS:400.0.500.0 | 400.0 | 500.0 |
+| EXPBINS:500.0.600.0 | 500.0 | 600.0 |
+| EXPBINS:600.0.700.0 | 600.0 | 700.0 |
+| EXPBINS:700.0.800.0 | 700.0 | 800.0 |
+| EXPBINS:800.0.900.0 | 800.0 | 900.0 |
+| EXPBINS:900.0.1000.0 | 900.0 | 1000.0 |
+| EXPBINS:1000.0.2000.0 | 1000.0 | 2000.0 |
+| EXPBINS:2000.0.3000.0 | 2000.0 | 3000.0 |
+| EXPBINS:3000.0.4000.0 | 3000.0 | 4000.0 |
+| EXPBINS:4000.0.5000.0 | 4000.0 | 5000.0 |
+| EXPBINS:5000.0.6000.0 | 5000.0 | 6000.0 |
+| EXPBINS:6000.0.7000.0 | 6000.0 | 7000.0 |
+| EXPBINS:7000.0.8000.0 | 7000.0 | 8000.0 |
+| EXPBINS:8000.0.9000.0 | 8000.0 | 9000.0 |
+| EXPBINS:9000.0.10000.0 | 9000.0 | 10000.0 |
+| EXPBINS:10000.0.20000.0 | 10000.0 | 20000.0 |
+| EXPBINS:20000.0.30000.0 | 20000.0 | 30000.0 |
+| EXPBINS:30000.0.40000.0 | 30000.0 | 40000.0 |
+| EXPBINS:40000.0.50000.0 | 40000.0 | 50000.0 |
+| EXPBINS:50000.0.60000.0 | 50000.0 | 60000.0 |
+| EXPBINS:60000.0.70000.0 | 60000.0 | 70000.0 |
+| EXPBINS:70000.0.80000.0 | 70000.0 | 80000.0 |
+| EXPBINS:80000.0.90000.0 | 80000.0 | 90000.0 |
+| EXPBINS:90000.0.100000.0 | 90000.0 | 100000.0 |
+| EXPBINS:100000.0.300000.0 | 100000.0 | 300000.0 |
+
+##### PVALUEBINS bin scheme
+
+PVALUEBINS comprises 17 bins over eQTL p-values, connected to GTEXEQTL nodes
+by the p_value relationship (SAB GTEXEQTL). Binning is logarithmic by decade
+from 1e-12 to 0.001, splits the 0.001 to 0.01 range at 0.005, and is linear
+at width 0.01 from 0.01 to 0.06. A terminal high significance bin spans 0 to
+1e-12. No bins exist above 0.06, reflecting the significance filtered source
+data. Bin identity is carried in the CodeID as PVALUEBINS:lower.upper. Note
+that the dot delimiter collides with scientific notation: PVALUEBINS:0.1e-12
+denotes the interval from 0 to 1e-12, not 0.1e-12. CodeIDs must not be
+parsed programmatically; use this table. Bin nodes carry no numeric
+properties; selection is by CodeID.
+
+| Summary | p-value range | Structure | Bins |
+|---|---|---|---|
+| Terminal high significance | 0 to 1e-12 | single | 1 |
+| Decades | 1e-12 to 1e-05 | one per decade | 7 |
+| Decades | 1e-05 to 0.001 | one per decade | 2 |
+| Split decade | 0.001 to 0.01 | split at 0.005 | 2 |
+| Linear | 0.01 to 0.06 | width 0.01 | 5 |
+
+##### PVALUEBINS complete bin table
+
+| CodeID | Lower (p) | Upper (p) |
+|---|---|---|
+| PVALUEBINS:0.1e-12 | 0 | 1e-12 |
+| PVALUEBINS:1e-12.1e-11 | 1e-12 | 1e-11 |
+| PVALUEBINS:1e-11.1e-10 | 1e-11 | 1e-10 |
+| PVALUEBINS:1e-10.1e-09 | 1e-10 | 1e-09 |
+| PVALUEBINS:1e-09.1e-08 | 1e-09 | 1e-08 |
+| PVALUEBINS:1e-08.1e-07 | 1e-08 | 1e-07 |
+| PVALUEBINS:1e-07.1e-06 | 1e-07 | 1e-06 |
+| PVALUEBINS:1e-06.1e-05 | 1e-06 | 1e-05 |
+| PVALUEBINS:1e-05.0.0001 | 1e-05 | 0.0001 |
+| PVALUEBINS:0.0001.0.001 | 0.0001 | 0.001 |
+| PVALUEBINS:0.001.0.005 | 0.001 | 0.005 |
+| PVALUEBINS:0.005.0.01 | 0.005 | 0.01 |
+| PVALUEBINS:0.01.0.02 | 0.01 | 0.02 |
+| PVALUEBINS:0.02.0.03 | 0.02 | 0.03 |
+| PVALUEBINS:0.03.0.04 | 0.03 | 0.04 |
+| PVALUEBINS:0.04.0.05 | 0.04 | 0.05 |
+| PVALUEBINS:0.05.0.06 | 0.05 | 0.06 |
+
+
+
 ### The Human BioMolecular Atlas Program (HuBMAP) DCC
 
 #### HuBMAP datasets
